@@ -7,13 +7,18 @@ use App\Filament\Resources\CharacterResource\RelationManagers;
 use App\Models\Alignment;
 use App\Models\Background;
 use App\Models\Character;
+use App\Models\Characteristic;
 use App\Models\ClassModel;
 use App\Models\Race;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -57,6 +62,92 @@ class CharacterResource extends Resource
                     ->searchable()
                     ->relationship('alignment', 'name')
                     ->preload(),
+                Repeater::make('characteristics')
+                    ->relationship('characteristics')
+                    ->schema([
+                        Select::make('characteristic_id')
+                            ->label('')
+                            ->options(
+                                Characteristic::pluck('name', 'id')
+                            )
+                            ->required()
+                            ->disabled()
+                            ->preload()
+                            ->searchable()->columnSpan(1),
+
+                        TextInput::make('input_value') // поле для вводу значення
+                            ->label('')
+                            ->reactive() // активуємо оновлення при кожній зміні
+                            ->afterStateUpdated(fn ($state, $set)
+                                => $set('value', round(($state - 10) / 2))
+                            )->columnSpan(1), // оновлюємо calculated_value,
+
+                        TextInput::make('value') // розраховане значення
+                            ->label('')
+                            ->disabled() // зробимо недоступним для редагування
+                            ->required()
+                            ->columnSpan(1),
+
+                        Checkbox::make('savingthrow')->columnSpan(1),
+                    ])
+                    ->columns(4) // встановлюємо розмір у три колонки
+                    ->columnSpanFull()
+                    ->reorderable(false)
+                    ->deletable(false)
+                    ->addable(false)
+                    ->default(function () {
+                        // Витягуємо всі характеристики і створюємо для кожної блок у Repeater
+                        $characteristics = Characteristic::all()->map(function ($characteristic) {
+                            return [
+                                'characteristic_id' => $characteristic->id,
+                                'characteristic_name' => $characteristic->name, // мапимо назву характеристики
+                                'input_value' => 10, // дефолтне значення
+                                'value' => 0, // дефолтне значення
+                            ];
+                        });
+                        return $characteristics->values()->toArray(); // Переконаємося, що повертається чистий масив
+                    }),
+
+        Forms\Components\Select::make('weapon_id')
+                    ->multiple()
+                    ->preload()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('weapons', 'name')
+                    ->preload()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('language_id')
+                    ->multiple()
+                    ->preload()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('languages', 'name')
+                    ->preload()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('proficiency_id')
+                    ->multiple()
+                    ->preload()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('proficiencies', 'name')
+                    ->preload()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('ability_id')
+                    ->multiple()
+                    ->preload()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('abilities', 'name')
+                    ->preload()
+                    ->columnSpanFull(),
+                Forms\Components\Select::make('spell_id')
+                    ->multiple()
+                    ->preload()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('spells', 'name')
+                    ->preload()
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('level')
                     ->required()
                     ->numeric(),

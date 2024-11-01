@@ -9,6 +9,8 @@ return new class extends Migration {
         Schema::create('proficiencies', function (Blueprint $table) {
             $table->id();
             $table->string('name', 20);
+            $table->unsignedBigInteger('characteristic_id')->nullable();
+            $table->foreign('characteristic_id')->references('id')->on('characteristics')->onDelete('set null');
         });
     }
 

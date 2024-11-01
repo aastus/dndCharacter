@@ -32,7 +32,9 @@ class Character extends Model {
     }
 
     public function characteristics() {
-        return $this->belongsToMany(Characteristic::class, 'character_characteristic')->withPivot('value');
+        return $this->belongsToMany(Characteristic::class, 'character_characteristic')
+            ->withPivot('value')
+            ->withPivot('savingthrow');
     }
 
     public function languages() {

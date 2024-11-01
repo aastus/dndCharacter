@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProficiencyResource\Pages;
 use App\Filament\Resources\ProficiencyResource\RelationManagers;
+use App\Models\Characteristic;
 use App\Models\Proficiency;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,6 +27,12 @@ class ProficiencyResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(20),
+                Forms\Components\Select::make('characteristic_id')
+                    ->required()
+                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('characteristic', 'name')
+                    ->preload(),
             ]);
     }
 

@@ -3,20 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CharacteristicResource\Pages;
-use App\Filament\Resources\CharacteristicResource\RelationManagers;
 use App\Models\Characteristic;
+use App\Models\Proficiency;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CharacteristicResource extends Resource
 {
     protected static ?string $model = Characteristic::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -26,6 +23,29 @@ class CharacteristicResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(20),
+
+                Forms\Components\Select::make('proficiencies')
+                    ->relationship('proficiencies', 'name')
+                    ->label('Proficiencies')
+                    ->multiple()
+                    ->preload()
+                    ->options(function () {
+                        return Proficiency::pluck('name', 'id');
+                    })
+                    ->createOptionUsing(function ($data, $get) {
+                        // Створюємо нову підкатегорію з ID поточної характеристики
+                        return Proficiency::create([
+                            'name' => $data['name'],
+                            'characteristic_id' => $get('id'), // Отримання ID поточної характеристики
+                        ])->id;
+                    })
+                    ->createOptionForm([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Proficiency Name')
+                            ->required(),
+                    ])
+                    ->searchable()
+                    ->placeholder('Select or add proficiencies'),
             ]);
     }
 
@@ -36,9 +56,7 @@ class CharacteristicResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -51,9 +69,7 @@ class CharacteristicResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

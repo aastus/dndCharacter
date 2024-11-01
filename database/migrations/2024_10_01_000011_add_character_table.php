@@ -39,7 +39,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
             $table->foreignId('characteristic_id')->constrained()->onDelete('cascade');
-            $table->boolean('value');
+            $table->unsignedSmallInteger('value');
+            $table->boolean('savingthrow');
         });
 
         Schema::create('character_language', function (Blueprint $table) {
@@ -47,10 +48,10 @@ return new class extends Migration {
             $table->foreignId('language_id')->constrained()->onDelete('cascade');
         });
 
-        Schema::create('character_proficiency', function (Blueprint $table) {
-            $table->foreignId('character_id')->constrained()->onDelete('cascade');
-            $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
-        });
+//        Schema::create('character_proficiency', function (Blueprint $table) {
+//            $table->foreignId('character_id')->constrained()->onDelete('cascade');
+//            $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
+//        });
 
         Schema::create('character_ability', function (Blueprint $table) {
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
