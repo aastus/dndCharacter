@@ -8,8 +8,9 @@ return [
     'middleware' => ['web'],
     'prompt' => 'Or Login Via',
     'providers' => [
-        // Providers::github(),
+         Providers::google(),
     ],
+    'prefix' => 'login',
     'features' => [
         // Features::generateMissingEmails(),
         // Features::createAccountOnFirstLogin(),
@@ -19,10 +20,10 @@ return [
         Features::providerAvatars(),
         Features::refreshOAuthTokens(),
     ],
-    'home' => '/dashboard',
+    'home' => '/',
     'redirects' => [
-        'login' => '/dashboard',
-        'register' => '/dashboard',
+        'login' => '/',
+        'register' => '/',
         'login-failed' => '/login',
         'registration-failed' => '/register',
         'provider-linked' => '/user/profile',

@@ -1,4 +1,6 @@
-<x-guest-layout>
+
+@extends('layouts.main')
+@section('content')
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -53,4 +55,4 @@
     @if (\JoelButcher\Socialstream\Socialstream::show())
         <x-socialstream />
     @endif
-</x-guest-layout>
+@endsection
