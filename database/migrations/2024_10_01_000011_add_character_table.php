@@ -48,10 +48,10 @@ return new class extends Migration {
             $table->foreignId('language_id')->constrained()->onDelete('cascade');
         });
 
-//        Schema::create('character_proficiency', function (Blueprint $table) {
-//            $table->foreignId('character_id')->constrained()->onDelete('cascade');
-//            $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
-//        });
+        Schema::create('character_proficiency', function (Blueprint $table) {
+            $table->foreignId('character_id')->constrained()->onDelete('cascade');
+            $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
+        });
 
         Schema::create('character_ability', function (Blueprint $table) {
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
