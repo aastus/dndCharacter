@@ -778,13 +778,28 @@ Banner Style
 */
 
 .main-banner {
-  background-image: url(../images/banner-bg.jpg);
-  background-position: center center;
-  background-size: cover;
-  min-height: 380px;
-  border-radius: 23px;
-  padding: 80px 60px;
+    position: relative; /* Забезпечує, що вкладені елементи з абсолютним позиціонуванням базуються на цьому контейнері */
+    overflow: hidden;
+    min-height: 560px;
+    border-radius: 23px;
+    padding: 80px 60px;
+    z-index: 1;
 }
+
+.background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    transform: translate(-50%, -50%); /* Центрує відео */
+    border: none;
+    pointer-events: none;
+}
+
 
 .main-banner h6 {
   font-size: 20px;

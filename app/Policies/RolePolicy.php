@@ -13,24 +13,16 @@ class RolePolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(User $user): bool
     {
-        if (is_null($user)) {
-            return true;
-        }
-
         return $user->can('view_any_role');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, Role $role): bool
+    public function view(User $user, Role $role): bool
     {
-        if (is_null($user)) {
-            return true;
-        }
-
         return $user->can('view_role');
     }
 

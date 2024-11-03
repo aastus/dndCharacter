@@ -16,6 +16,7 @@ class User extends Authenticatable implements FilamentUser
     use HasPanelShield;
     use HasFactory, Notifiable;
     use HasRoles;
+    use HasPanelShield;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +24,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->hasAnyRole(['panel_user', 'super_admin']);
     }
 
     protected $fillable = [

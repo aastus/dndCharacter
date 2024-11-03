@@ -27,6 +27,63 @@
     https://templatemo.com/tm-579-cyborg-gaming
 
     -->
+    <style>
+        /* Ваші стилі */
+        .header-area .main-nav {
+            min-height: 80px;
+            background: transparent;
+            display: flex;
+            padding: 15px 0px;
+            border-radius: 50px;
+        }
+
+        .header-area .main-nav .nav {
+            display: inline-flex;
+            flex-basis: 70%;
+            justify-content: flex-end;
+            vertical-align: middle;
+            text-align: right;
+            margin-top: 0px;
+            margin-right: 0px;
+            position: relative;
+            z-index: 999;
+        }
+
+        .header-area .main-nav .nav .dropdown-menu {
+            display: none; /* Сховати випадаюче меню за замовчуванням */
+            position: absolute; /* Позиція випадаючого меню */
+            top: 100%; /* Розмістити його під елементом */
+            left: 0;
+            background-color: #1f2122;; /* Білий фон для випадаючого списку */
+            border-radius: 10px; /* Заокруглені кути */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Тінь для випадаючого списку */
+            z-index: 1000; /* Забезпечити, щоб меню було зверху */
+        }
+
+        .header-area .main-nav .nav .dropdown-menu li {
+            padding: 10px 15px; /* Внутрішні відступи для пунктів меню */
+        }
+
+        /*.header-area .main-nav .nav .dropdown-menu li a {*/
+        /*    display: block; !* Зробити посилання на всю ширину *!*/
+        /*    color: #666; !* Колір тексту *!*/
+        /*    text-transform: capitalize; !* Перетворити текст на заголовки *!*/
+        /*    font-size: 14px; !* Розмір шрифту *!*/
+        /*    border-radius: 5px; !* Заокруглені кути *!*/
+        /*    transition: background-color 0.3s ease; !* Анімація для фону *!*/
+        /*}*/
+
+        .header-area .main-nav .nav .dropdown-menu li a:hover {
+            background-color: #e75e8d; /* Колір фону при наведенні */
+            color: #fff; /* Колір тексту при наведенні */
+        }
+
+        .header-area .main-nav .nav li.has-sub:hover .dropdown-menu {
+            display: block; /* Показати меню при наведенні на батьківський елемент */
+        }
+
+        /* Інші стилі вашого CSS */
+    </style>
 </head>
 
 <body>
@@ -55,7 +112,7 @@
                         <img src="assets/images/logo.png" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
-                    <!-- ***** Search End ***** -->
+                    <!-- ***** Search Start ***** -->
                     <div class="search-input">
                         <form id="search" action="#">
                             <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
@@ -69,7 +126,46 @@
                         <li><a href="browse.html" class="active">Browse</a></li>
                         <li><a href="details.html">Details</a></li>
                         <li><a href="streams.html">Streams</a></li>
-                        <li><a href="profile.html">Profile <img src="assets/images/profile-header.jpg" alt=""></a></li>
+                        <li class="has-sub">
+                            <a href="profile.html" class="profile-menu-trigger">Profile <img src="assets/images/profile-header.jpg" alt=""></a>
+                            <ul class="dropdown-menu">
+                                <center>
+                                    @if (Route::has('login'))
+                                            @auth
+                                                <li>
+                                                <a
+                                                    href="{{ url('/dashboard') }}">
+                                                    Dashboard
+                                                </a>
+                                                </li>
+                                            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                                                @csrf
+                                                <li>
+                                                    <button type="submit" class="btn btn-sm btn-outline-none">
+                                                       <a> {{ __('Log Out') }}</a>
+                                                    </button>
+                                                </li>
+                                            </form>
+                                            @else
+                                            <li>
+                                                <a
+                                                    href="{{ route('login') }}">
+                                                    Log in
+                                                </a>
+                                            </li>
+                                                @if (Route::has('register'))
+                                                <li>
+                                                    <a
+                                                        href="{{ route('register') }}">
+                                                        Register
+                                                    </a>
+                                                </li>
+                                                @endif
+                                            @endauth
+                                    @endif
+                                </center>
+                            </ul>
+                        </li>
                     </ul>
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -96,7 +192,18 @@
     </div>
 </footer>
 
+<script>
+    // JavaScript для випадаючого меню
+    document.querySelectorAll('.nav li.has-sub').forEach(function(item) {
+        item.addEventListener('mouseenter', function() {
+            this.querySelector('.dropdown-menu').style.display = 'block';
+        });
 
+        item.addEventListener('mouseleave', function() {
+            this.querySelector('.dropdown-menu').style.display = 'none';
+        });
+    });
+</script>
 <!-- Scripts -->
 <!-- Bootstrap core JavaScript -->
 <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
