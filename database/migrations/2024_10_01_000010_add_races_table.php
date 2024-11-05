@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->text('description');
             $table->string('suggested_names', 200)->nullable();
             $table->unsignedTinyInteger('move_speed');
+            $table->unsignedTinyInteger('available_proficiency')->nullable();
             $table->timestamps();
         });
 
@@ -26,6 +27,12 @@ return new class extends Migration {
             $table->foreignId('language_id')->constrained()->onDelete('cascade');
         });
 
+        Schema::create('race_characteristic', function (Blueprint $table) {
+            $table->foreignId('race_id')->constrained()->onDelete('cascade');
+            $table->foreignId('characteristic_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('value');
+        });
+
         Schema::create('race_proficiency', function (Blueprint $table) {
             $table->foreignId('race_id')->constrained()->onDelete('cascade');
             $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
@@ -33,9 +40,10 @@ return new class extends Migration {
     }
 
     public function down() {
+        Schema::dropIfExists('race_proficiency');
         Schema::dropIfExists('race_ability');
         Schema::dropIfExists('race_language');
-        Schema::dropIfExists('race_proficiency');
+        Schema::dropIfExists('race_characteristic');
         Schema::dropIfExists('races');
     }
 };

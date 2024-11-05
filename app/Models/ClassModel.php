@@ -9,18 +9,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClassModel extends Model {
     protected $table = 'classes';
-    protected $fillable = ['name', 'description', 'hp_per_level', 'is_magic'];
+    protected $fillable = ['name', 'description', 'hp_per_level', 'is_magic', 'available_proficiency'];
 
     public function characters() {
         return $this->hasMany(Character::class);
     }
 
     public function abilities() {
-        return $this->belongsToMany(Ability::class, 'class_ability');
+        return $this->belongsToMany(Ability::class, 'class_ability', 'class_id');
     }
 
     public function spells() {
-        return $this->belongsToMany(Spell::class, 'class_spell');
+        return $this->belongsToMany(Spell::class, 'class_spell', 'class_id');
+    }
+
+    public function proficiencies() {
+        return $this->belongsToMany(Proficiency::class, 'class_proficiency', 'class_id');
     }
 
     public static function getForm()

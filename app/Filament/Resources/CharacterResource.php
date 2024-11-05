@@ -9,9 +9,12 @@ use App\Models\Background;
 use App\Models\Character;
 use App\Models\Characteristic;
 use App\Models\ClassModel;
+use App\Models\Proficiency;
 use App\Models\Race;
+use App\Models\Spell;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -38,17 +41,32 @@ class CharacterResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(40),
+                Forms\Components\TextInput::make('level')
+                    ->required()
+                    ->default(1)
+                    ->afterStateUpdated(fn ($get, $set) => self::updateSpellsList($get, $set))
+                    ->numeric(),
+                Forms\Components\TextInput::make('armor_type')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\Select::make('class_id')
                     ->required()
                     ->createOptionForm(ClassModel::getForm())
                     ->searchable()
+                    ->reactive()
                     ->relationship('class', 'name')
+                    ->afterStateUpdated(function ($get, $set) {
+                        self::updateProficiencyList($get, $set);
+                        self::updateSpellsList($get, $set);
+                    })
                     ->preload(),
                 Forms\Components\Select::make('race_id')
                     ->required()
                     ->createOptionForm(Race::getForm())
                     ->searchable()
+                    ->reactive()
                     ->relationship('race', 'name')
+                    ->afterStateUpdated(fn ($get, $set) => self::updateProficiencyList($get, $set))
                     ->preload(),
                 Forms\Components\Select::make('background_id')
                     ->required()
@@ -87,10 +105,8 @@ class CharacterResource extends Resource
                             ->disabled() // зробимо недоступним для редагування
                             ->required()
                             ->columnSpan(1),
-
-                        Checkbox::make('savingthrow')->columnSpan(1),
                     ])
-                    ->columns(4) // встановлюємо розмір у три колонки
+                    ->columns(3) // встановлюємо розмір у три колонки
                     ->columnSpanFull()
                     ->reorderable(false)
                     ->deletable(false)
@@ -108,7 +124,18 @@ class CharacterResource extends Resource
                         return $characteristics->values()->toArray(); // Переконаємося, що повертається чистий масив
                     }),
 
-        Forms\Components\Select::make('weapon_id')
+                CheckboxList::make('proficiencies')
+                    ->label('Володіння')
+                    ->options(function (callable $get) {
+                        return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
+                            ->pluck('name', 'id');
+                    })
+                    ->rules(function (callable $get) {
+                        $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
+                        return $maxProficiency > 0 ? ['max:' . $maxProficiency] : [];
+                    }),
+
+                Forms\Components\Select::make('weapon_id')
                     ->multiple()
                     ->preload()
 //                    ->createOptionForm(Characteristic::getForm())
@@ -124,36 +151,17 @@ class CharacterResource extends Resource
                     ->relationship('languages', 'name')
                     ->preload()
                     ->columnSpanFull(),
-                Forms\Components\Select::make('proficiency_id')
-                    ->multiple()
-                    ->preload()
-//                    ->createOptionForm(Characteristic::getForm())
-                    ->searchable()
-                    ->relationship('proficiencies', 'name')
-                    ->preload()
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('ability_id')
-                    ->multiple()
-                    ->preload()
-//                    ->createOptionForm(Characteristic::getForm())
-                    ->searchable()
-                    ->relationship('abilities', 'name')
-                    ->preload()
-                    ->columnSpanFull(),
                 Forms\Components\Select::make('spell_id')
                     ->multiple()
                     ->preload()
 //                    ->createOptionForm(Characteristic::getForm())
                     ->searchable()
-                    ->relationship('spells', 'name')
+                    ->options(function (callable $get) {
+                        return Spell::whereIn('id', self::availableSpels($get('class_id'), $get('level')))
+                            ->pluck('name', 'id');
+                    })
                     ->preload()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('level')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('armor_type')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\TextInput::make('hit_points')
                     ->required()
                     ->numeric(),
@@ -200,6 +208,8 @@ class CharacterResource extends Resource
                 Forms\Components\TextInput::make('notes')
                     ->maxLength(500),
             ]);
+
+
     }
 
     public static function table(Table $table): Table
@@ -301,5 +311,44 @@ class CharacterResource extends Resource
             'create' => Pages\CreateCharacter::route('/create'),
             'edit' => Pages\EditCharacter::route('/{record}/edit'),
         ];
+    }
+
+    protected static function updateProficiencyList(callable $get, callable $set) {
+        $raceId = $get('race_id') ?? null;
+        $classId = $get('class_id') ?? null;
+
+        $availableProficiencies = self::availableProficiencies($raceId, $classId);
+
+        $set('proficiencies', collect($availableProficiencies)->pluck('id')->all());
+    }
+
+
+    protected static function availableProficiencies($raceId, $classId) {
+        $race_prof = Race::find($raceId)?->proficiencies->pluck('id');
+        $class_prof = ClassModel::find($classId)?->proficiencies->pluck('id');
+        if($class_prof != null && $race_prof != null)
+            return $race_prof->merge($class_prof);
+        else if($class_prof != null)
+            return $class_prof;
+        else if($race_prof != null)
+            return $race_prof;
+        else
+            return [];
+    }
+
+    protected static function getTotalAvailableProficiency($raceId, $classId) {
+        return (Race::find($raceId)?->available_proficiency ?? 0) +
+            (ClassModel::find($classId)?->available_proficiency ?? 0);
+    }
+
+    protected static function updateSpellsList(callable $get, callable $set) {
+        $classId = $get('class_id') ?? null;
+        $level = $get('level');
+        $set('proficiencies', collect(self::availableSpels($classId, $level))->pluck('id')->all());
+    }
+
+    protected static function availableSpels($classId, $level) {
+        $is_magic = (ClassModel::find($classId)->is_magic ?? 0) + 1;
+        return ClassModel::find($classId)?->spells()->where('level', '<=', floor(($level - 1) / 2 * $is_magic) + 1)->pluck('id') ?? [];
     }
 }

@@ -10,27 +10,33 @@ return new class extends Migration {
             $table->id();
             $table->string('character_name', 40);
             $table->string('name', 40);
+
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
             $table->foreignId('race_id')->constrained()->onDelete('cascade');
             $table->foreignId('background_id')->constrained()->onDelete('cascade');
             $table->foreignId('alignment_id')->constrained()->onDelete('cascade');
+
             $table->unsignedTinyInteger('level');
             $table->unsignedTinyInteger('armor_type');
             $table->unsignedTinyInteger('hit_points');
             $table->unsignedTinyInteger('plus_speed')->nullable();
+
             $table->string('traits', 300);
             $table->string('ideals', 300);
             $table->string('bonds', 300);
             $table->string('flaws', 300);
+
             $table->string('prehistory', 300);
             $table->string('inventory', 300);
             $table->string('goals', 300);
+
             $table->unsignedSmallInteger('age');
             $table->unsignedTinyInteger('height');
             $table->unsignedTinyInteger('weight');
             $table->string('eye_color', 30);
             $table->string('skin_color', 30);
             $table->string('hair_color', 30)->nullable();
+            
             $table->string('notes', 500)->nullable();
             $table->timestamps();
         });
@@ -39,8 +45,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
             $table->foreignId('characteristic_id')->constrained()->onDelete('cascade');
-            $table->unsignedSmallInteger('value');
-            $table->boolean('savingthrow');
+            $table->unsignedTinyInteger('value');
         });
 
         Schema::create('character_language', function (Blueprint $table) {
@@ -51,6 +56,7 @@ return new class extends Migration {
         Schema::create('character_proficiency', function (Blueprint $table) {
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
             $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
+            $table->boolean('specialize');
         });
 
         Schema::create('character_ability', function (Blueprint $table) {

@@ -7,7 +7,7 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Model;
 
 class Race extends Model {
-    protected $fillable = ['name', 'description', 'move_speed', 'suggested_names'];
+    protected $fillable = ['name', 'description', 'move_speed', 'suggested_names', 'available_proficiency'];
 
     public function characters() {
         return $this->hasMany(Character::class);
@@ -19,6 +19,10 @@ class Race extends Model {
 
     public function languages() {
         return $this->belongsToMany(Language::class, 'race_language');
+    }
+
+    public function characteristics() {
+        return $this->belongsToMany(Characteristic::class, 'race_characteristic')->withPivot('value');
     }
 
     public function proficiencies() {

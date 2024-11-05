@@ -17,7 +17,6 @@ class Characteristic extends Model {
     {
         return $this->hasMany(Proficiency::class, 'characteristic_id');
     }
-
     public static function getForm()
     {
         return [
@@ -25,5 +24,9 @@ class Characteristic extends Model {
                 ->required()
                 ->maxLength(20),
         ];
+    }
+
+    public function races() {
+        return $this->belongsToMany(Race::class, 'race_characheristic');
     }
 }

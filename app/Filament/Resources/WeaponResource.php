@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WeaponResource\Pages;
 use App\Filament\Resources\WeaponResource\RelationManagers;
+use App\Models\Characteristic;
 use App\Models\Weapon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,6 +38,12 @@ class WeaponResource extends Resource
                 Forms\Components\TextInput::make('damage')
                     ->required()
                     ->numeric(),
+                Select::make('characteristic')
+                    ->required()
+//                    ->createOptionForm(Characteristic::getForm())
+                    ->searchable()
+                    ->relationship('characteristic', 'name')
+                    ->preload(),
             ]);
     }
 

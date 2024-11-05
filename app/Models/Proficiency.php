@@ -13,10 +13,6 @@ class Proficiency extends Model {
         return $this->belongsToMany(Background::class, 'background_proficiency');
     }
 
-    public function races() {
-        return $this->belongsToMany(Race::class, 'race_proficiency');
-    }
-
     public function characters() {
         return $this->belongsToMany(Character::class, 'character_proficiency');
     }

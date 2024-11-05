@@ -4,8 +4,15 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RaceResource\Pages;
 use App\Filament\Resources\RaceResource\RelationManagers;
+use App\Models\Ability;
+use App\Models\Characteristic;
+use App\Models\Language;
+use App\Models\Proficiency;
 use App\Models\Race;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -34,6 +41,54 @@ class RaceResource extends Resource
                 Forms\Components\TextInput::make('move_speed')
                     ->required()
                     ->numeric(),
+                Select::make('languages')
+                    ->required()
+                    ->multiple()
+//                    ->createOptionForm(Language::getForm())
+                    ->searchable()
+                    ->relationship('languages', 'name')
+                    ->preload(),
+
+                Select::make('abilities')
+                    ->label('Доступні Вміння')
+                    ->multiple()
+//                    ->createOptionForm(Ability::getForm())
+                    ->searchable()
+                    ->relationship('abilities', 'name')
+                    ->options(Ability::all()->pluck('name', 'id'))
+                    ->preload(),
+
+                Select::make('proficiencies')
+                    ->label('Доступні Володіння')
+                    ->multiple()
+//                    ->createOptionForm(Proficiency::getForm())
+                    ->searchable()
+                    ->relationship('proficiencies', 'name')
+                    ->options(Proficiency::all()->pluck('name', 'id'))
+                    ->preload(),
+                Forms\Components\TextInput::make('available_proficiency')
+                    ->required()
+                    ->default(0)
+                    ->numeric(),
+
+                Repeater::make('characteristics')
+                    ->relationship('characteristics')
+                    ->label('Характеристики')
+                    ->schema([
+                        Select::make('characteristic_id')
+                            ->label('Характеристика')
+                            ->options(Characteristic::all()->pluck('name', 'id'))
+                            ->required()
+                            ->searchable(),
+
+                        TextInput::make('value')
+                            ->label('Значення')
+                            ->required()
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(10),
+                    ])
+                    ->createItemButtonLabel('Додати характеристику')
             ]);
     }
 

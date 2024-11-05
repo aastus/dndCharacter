@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BackgroundResource\Pages;
 use App\Filament\Resources\BackgroundResource\RelationManagers;
 use App\Models\Background;
+use App\Models\Proficiency;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -29,6 +30,14 @@ class BackgroundResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
+                Forms\Components\Select::make('proficiencies')
+                    ->label('Доступні Володіння')
+                    ->multiple()
+//                    ->createOptionForm(Proficiency::getForm())
+                    ->searchable()
+                    ->relationship('proficiencies', 'name')
+                    ->options(Proficiency::all()->pluck('name', 'id'))
+                    ->preload(),
             ]);
     }
 

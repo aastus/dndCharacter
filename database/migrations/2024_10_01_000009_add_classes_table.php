@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->text('description');
             $table->unsignedTinyInteger('hp_per_level');
             $table->boolean('is_magic');
+            $table->unsignedTinyInteger('available_proficiency')->nullable();
             $table->timestamps();
         });
 
@@ -24,9 +25,15 @@ return new class extends Migration {
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
             $table->foreignId('spell_id')->constrained()->onDelete('cascade');
         });
+
+        Schema::create('class_proficiency', function (Blueprint $table) {
+            $table->foreignId('class_id')->constrained()->onDelete('cascade');
+            $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
+        });
     }
 
     public function down() {
+        Schema::dropIfExists('class_proficiency');
         Schema::dropIfExists('class_ability');
         Schema::dropIfExists('class_spell');
         Schema::dropIfExists('classes');

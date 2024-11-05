@@ -4,8 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ClassModelResource\Pages;
 use App\Filament\Resources\ClassModelResource\RelationManagers;
+use App\Models\Ability;
 use App\Models\ClassModel;
+use App\Models\Proficiency;
+use App\Models\Spell;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -34,6 +39,39 @@ class ClassModelResource extends Resource
                     ->numeric(),
                 Forms\Components\Toggle::make('is_magic')
                     ->required(),
+                Select::make('abilities')
+                    ->label('Доступні Вміння')
+                    ->multiple()
+//                    ->createOptionForm(Ability::getForm())
+                    ->searchable()
+                    ->relationship('abilities', 'name')
+                    ->options(Ability::all()->pluck('name', 'id'))
+                    ->preload(),
+
+                Select::make('spells')
+                    ->label('Доступні Заклинання')
+                    ->multiple()
+//                    ->createOptionForm(Spell::getForm())
+                    ->searchable()
+                    ->relationship('spells', 'name')
+                    ->options(Spell::all()->pluck('name', 'id'))
+                    ->preload(),
+                Forms\Components\TextInput::make('available_proficiency')
+                    ->required()
+                    ->default(0)
+                    ->numeric(),
+
+                Select::make('proficiencies')
+                    ->label('Доступні Володіння')
+                    ->multiple()
+//                    ->createOptionForm(Proficiency::getForm())
+                    ->searchable()
+                    ->relationship('proficiencies', 'name')
+                    ->options(Proficiency::all()->pluck('name', 'id'))
+                    ->preload()
+                    ->hintAction(fn (Select $component) => Action::make('select all')
+                        ->action(fn () => $component->state(Proficiency::pluck('id')->toArray()))
+                    ),
             ]);
     }
 
