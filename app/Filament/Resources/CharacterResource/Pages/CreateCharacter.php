@@ -201,6 +201,14 @@ class CreateCharacter extends CreateRecord
 
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
+                            TextInput::make('selectedProficiencyCount')
+                                ->label('Вибрано з доступних')
+                                ->extraInputAttributes(['readonly' => true]) // Робимо поле лише для читання
+                                ->reactive()
+                                ->suffix(function (callable $get) {
+                                    $maxCount = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
+                                    return "з $maxCount";
+                                }),
                         ])
                         ->afterValidation(function () {
                             $data = $this->form->getState();
@@ -224,6 +232,7 @@ class CreateCharacter extends CreateRecord
                             Forms\Components\Select::make('spell_id')
                                 ->multiple()
                                 ->preload()
+                                ->relationship('spells', 'name')
                                 //                    ->createOptionForm(Characteristic::getForm())
                                 ->searchable()
                                 ->options(function (callable $get) {

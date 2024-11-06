@@ -32,6 +32,12 @@ class SpellResource extends Resource
                 Forms\Components\TextInput::make('level')
                     ->required()
                     ->numeric(),
+                Forms\Components\MultiSelect::make('classes')
+                    ->relationship('classes', 'name')
+                    ->label('Класи, що мають це заклинання')
+                    ->placeholder('Виберіть класи...')
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 
@@ -55,12 +61,6 @@ class SpellResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Forms\Components\MultiSelect::make('classes')
-                    ->relationship('classes', 'name')
-                    ->label('Класи, що мають це заклинання')
-                    ->placeholder('Виберіть класи...')
-                    ->preload()
-                    ->searchable(),
             ])
             ->filters([
                 //

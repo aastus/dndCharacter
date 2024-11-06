@@ -371,6 +371,14 @@ class CharacterResource extends Resource
 
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
+                            TextInput::make('selectedProficiencyCount')
+                                ->label('Вибрано з доступних')
+                                ->extraInputAttributes(['readonly' => true]) // Робимо поле лише для читання
+                                ->reactive()
+                                ->suffix(function (callable $get) {
+                                    $maxCount = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
+                                    return "з $maxCount";
+                                }),
                         ]),
 
                     // Четверта вкладка — Зброя і Заклинання
@@ -572,18 +580,18 @@ class CharacterResource extends Resource
                         })->toArray()
                     ),
 
-                Section::make('Навички')
-                    ->schema(
-                        fn ($record) => $record->proficiencies->map(function ($proficiency) use ($record) {
-                            $bonus = $record->characteristics
-                                    ->where('id', $proficiency->characteristic_id)
-                                    ->first()->value + (($record->proficiencies->specialize ?? -1) + 1) * 2;
-
-                            return TextEntry::make("proficiency_{$proficiency->id}")
-                                ->label($proficiency->name)
-                                ->default($bonus);
-                        })->toArray()
-                    ),
+//                Section::make('Навички')
+//                    ->schema(
+//                        fn ($record) => $record->proficiencies->map(function ($proficiency) use ($record) {
+//                            $bonus = $record->characteristics
+//                                    ->where('id', $proficiency->characteristic_id)
+//                                    ->first()->value + (($record->proficiencies->specialize ?? -1) + 1) * 2;
+//
+//                            return TextEntry::make("proficiency_{$proficiency->id}")
+//                                ->label($proficiency->name)
+//                                ->default($bonus);
+//                        })->toArray()
+//                    ),
 
                 Section::make('Мови')
                     ->schema([
