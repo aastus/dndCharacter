@@ -14,6 +14,7 @@ class ProficiencySeeder extends Seeder {
             ['name' => 'Артистичність', 'characteristic' => 'Харизма'],
             ['name' => 'Атлетика',      'characteristic' => 'Сила'],
             ['name' => 'Сприйняття',    'characteristic' => 'Мудрість'],
+            ['name' => 'Виживання',     'characteristic' => 'Мудрість'],
             ['name' => 'Залякування',   'characteristic' => 'Харизма'],
             ['name' => 'Медицина',      'characteristic' => 'Мудрість'],
             ['name' => 'Непомітність',  'characteristic' => 'Спритність'],
@@ -25,6 +26,7 @@ class ProficiencySeeder extends Seeder {
             ['name' => 'Релігія',       'characteristic' => 'Інтелект'],
             ['name' => 'Розслідування', 'characteristic' => 'Інтелект'],
             ['name' => 'Спритність рук','characteristic' => 'Спритність'],
+            ['name' => 'Магія',         'characteristic' => 'Інтелект'],
         ];
 
         foreach ($proficiencies as $proficiency) {

@@ -14,15 +14,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ShieldSeeder::class,
             CharacteristicSeeder::class,
+            ProficiencySeeder::class,
             LanguageSeeder::class,
             AlignmentSeeder::class,
-            ProficiencySeeder::class,
+            AbilitySeeder::class,
             BackgroundSeeder::class,
             WeaponSeeder::class,
+            SpellSeeder::class,
             RaceSeeder::class,
             ClassModelSeeder::class,
-            AbilitySeeder::class,
-            SpellSeeder::class,
         ]);
     }
 }

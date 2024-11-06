@@ -15,6 +15,10 @@ class ClassModel extends Model {
         return $this->hasMany(Character::class);
     }
 
+    public function savingthrows() {
+        return $this->belongsToMany(Characteristic::class, 'class_characteristic', 'class_id');
+    }
+
     public function abilities() {
         return $this->belongsToMany(Ability::class, 'class_ability', 'class_id');
     }

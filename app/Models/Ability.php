@@ -8,7 +8,7 @@ class Ability extends Model {
     protected $fillable = ['name', 'description', 'level'];
 
     public function classes() {
-        return $this->belongsToMany(ClassModel::class, 'class_ability');
+        return $this->belongsToMany(ClassModel::class, 'class_ability', 'ability_id', 'class_id');
     }
 
     public function races() {

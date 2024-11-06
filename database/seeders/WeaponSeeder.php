@@ -23,7 +23,7 @@ class WeaponSeeder extends Seeder {
                 'characteristic'=> 'Сила',
             ],
             [
-                'name'          => '50000',
+                'name'          => 'Палиця',
                 'description'   => 'Проста і легка зброя, зазвичай зроблена з дерева, що підходить для ближнього бою. Урон: дроблячий',
                 'damage'        => 4,
                 'cost'          => 100,

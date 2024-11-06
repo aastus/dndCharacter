@@ -32,6 +32,29 @@ class AbilityResource extends Resource
                 Forms\Components\TextInput::make('level')
                     ->required()
                     ->numeric(),
+                Forms\Components\MultiSelect::make('classes')
+                    ->relationship('classes', 'name')
+                    ->label('Класи, що мають цю здібність:')
+                    ->placeholder('Виберіть класи...')
+                    ->preload()
+                    ->searchable(),
+                Forms\Components\MultiSelect::make('races')
+                    ->relationship('races', 'name')
+                    ->label('Раси, що мають цю здібність:')
+                    ->placeholder('Виберіть раси...')
+                    ->preload()
+                    ->searchable(),Forms\Components\MultiSelect::make('classes')
+                    ->relationship('classes', 'name')
+                    ->label('Класи, що мають цю здібність:')
+                    ->placeholder('Виберіть класи...')
+                    ->preload()
+                    ->searchable(),
+                Forms\Components\MultiSelect::make('races')
+                    ->relationship('races', 'name')
+                    ->label('Раси, що мають цю здібність:')
+                    ->placeholder('Виберіть раси...')
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 

@@ -8,7 +8,7 @@ class Spell extends Model {
     protected $fillable = ['name', 'description', 'level'];
 
     public function classes() {
-        return $this->belongsToMany(ClassModel::class, 'class_spell');
+        return $this->belongsToMany(ClassModel::class, 'class_spell', 'spell_id', 'class_id');
     }
 
     public function characters() {
