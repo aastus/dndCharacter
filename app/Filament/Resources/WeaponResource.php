@@ -59,6 +59,9 @@ class WeaponResource extends Resource
                 Tables\Columns\TextColumn::make('damage')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('characteristic.name')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

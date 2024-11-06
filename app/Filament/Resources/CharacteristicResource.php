@@ -53,8 +53,10 @@ class CharacteristicResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TagsColumn::make('proficiencies.name')
+                    ->searchable()
+                    ->separator(', '),
             ])
             ->filters([])
             ->actions([

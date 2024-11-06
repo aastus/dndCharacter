@@ -40,9 +40,9 @@ class ProficiencyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-            ])
+                    Tables\Columns\TextColumn::make('name')->searchable(),
+                    Tables\Columns\TextColumn::make('characteristic.name')->searchable(),
+                ])
             ->filters([
                 //
             ])

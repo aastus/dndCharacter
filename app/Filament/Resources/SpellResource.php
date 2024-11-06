@@ -44,6 +44,9 @@ class SpellResource extends Resource
                 Tables\Columns\TextColumn::make('level')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TagsColumn::make('classes.name')
+                    ->searchable()
+                    ->separator(', '),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

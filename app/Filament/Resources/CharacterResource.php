@@ -18,6 +18,10 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -258,11 +262,7 @@ class CharacterResource extends Resource
                                 ->default(1)
                                 ->afterStateUpdated(fn ($get, $set) => self::updateSpellsList($get, $set))
                                 ->numeric(),
-                        ])
-                        ->afterValidation(function ($state) {
-                            $character = new Character($state);
-                            $character->save();
-                        }),
+                        ]),
                 // Друга вкладка — Персонаж Інфо
                     Forms\Components\Wizard\Step::make('Персонаж Інфо')
                         ->schema([
@@ -298,11 +298,7 @@ class CharacterResource extends Resource
                                 ->relationship('languages', 'name')
                                 ->preload()
                                 ->columnSpanFull(),
-                        ])
-                        ->afterValidation(function ($state) {
-                            $character = new Character($state);
-                            $character->save();
-                        }),
+                        ]),
 
                     // Третя вкладка — Характеристики
                     Forms\Components\Wizard\Step::make('Характеристики')
@@ -352,15 +348,29 @@ class CharacterResource extends Resource
                                 }),
 
                             CheckboxList::make('proficiencies')
+                                ->relationship(name: 'proficiencies', titleAttribute: 'name')
                                 ->label('Володіння')
                                 ->options(function (callable $get) {
                                     return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
                                         ->pluck('name', 'id');
                                 })
-                                ->rules(function (callable $get) {
+                                ->default(function (callable $get) {
+                                    $savedProficiencies = $get('record')?->proficiencies->pluck('id')->toArray() ?? [];
+                                    return $savedProficiencies;
+                                })
+                                ->reactive()
+                                ->afterStateUpdated(function (callable $get, callable $set, $state) {
                                     $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
-                                    return $maxProficiency > 0 ? ['max:' . $maxProficiency] : [];
-                                }),
+                                    $selectedCount = count(array_filter($state, fn($value) => $value !== null));
+
+                                    if ($selectedCount > $maxProficiency) {
+                                        array_pop($state);
+                                        $selectedCount--;
+                                        $set('proficiencies', $state);
+                                    }
+
+                                    $set('selectedProficiencyCount', $selectedCount);
+                                })->columns(3),
                         ]),
 
                     // Четверта вкладка — Зброя і Заклинання
@@ -437,65 +447,24 @@ class CharacterResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('character_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('class_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('race_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('background_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('alignment_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('character_name')->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('level')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('race.name')->searchable(),
+                Tables\Columns\TextColumn::make('class.name')->searchable(),
+                Tables\Columns\TextColumn::make('alignment.name')->searchable(),
+                Tables\Columns\TextColumn::make('background.name')->searchable(),
                 Tables\Columns\TextColumn::make('armor_type')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('hit_points')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('plus_speed')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('traits')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('ideals')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('bonds')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('flaws')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('prehistory')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('inventory')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('goals')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('age')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('height')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('weight')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('eye_color')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('skin_color')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('hair_color')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('notes')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -510,11 +479,134 @@ class CharacterResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make()
+                    ->schema([
+                        Section::make('Main info')
+                            ->schema([
+                                TextEntry::make('character_name')
+                                    ->label('Ім\'я персонажа')
+                                    ->default(fn ($record) => $record->character_name),
+                                TextEntry::make('class_name')
+                                    ->label('Клас')
+                                    ->default(fn ($record) => $record->class->name),
+                                TextEntry::make('race_name')
+                                    ->label('Раса')
+                                    ->default(fn ($record) => $record->race->name),
+                                TextEntry::make('background_name')
+                                    ->label('Передісторія')
+                                    ->default(fn ($record) => $record->background->name),
+                                TextEntry::make('alignment_name')
+                                    ->label('Світогляд')
+                                    ->default(fn ($record) => $record->alignment->name),
+                                TextEntry::make('player_name')
+                                    ->label('Ім\'я гравця')
+                                    ->default(fn ($record) => $record->name),
+                                TextEntry::make('level')
+                                    ->label('Рівень')
+                                    ->default(fn ($record) => $record->level),
+                            ])
+                            ->columns(3)
+                    ]),
+
+                        Section::make('Additional info')
+                            ->schema([
+                                TextEntry::make('age')
+                                    ->label('Age')
+                                    ->default(fn ($record) => $record->age),
+                                TextEntry::make('height')
+                                    ->label('height')
+                                    ->default(fn ($record) => $record->height),
+                                TextEntry::make('weight')
+                                    ->label('weight')
+                                    ->default(fn ($record) => $record->weight),
+                                TextEntry::make('eye_color')
+                                    ->label('eye_color')
+                                    ->default(fn ($record) => $record->eye_color),
+                                TextEntry::make('skin_color')
+                                    ->label('skin_color')
+                                    ->default(fn ($record) => $record->skin_color),
+                                TextEntry::make('hair_color')
+                                    ->label('hair_color')
+                                    ->default(fn ($record) => $record->hair_color),
+                            ])->columns(3),
+
+                Section::make('Статистика')
+                    ->schema([
+                        TextEntry::make('speed')
+                            ->label('Швидкість')
+                            ->default(fn ($record) => $record->class->move_speed + $record->plus_speed),
+                        TextEntry::make('hit_points')
+                            ->label('Хіти')
+                            ->default(fn ($record) => $record->class->hp_per_level * $record->level),
+                    ])
+                    ->columns(2),
+
+                Section::make('Характеристики')
+                    ->schema(
+                        fn ($record) => $record->characteristics->map(function ($characteristic) {
+                            return TextEntry::make("characteristic_{$characteristic->id}")
+                                ->label($characteristic->name)
+                                ->default($characteristic->value);
+                        })->toArray()
+                    ),
+
+                Section::make('Рятівні кидки')
+                    ->schema(
+                        fn ($record) => $record->characteristics->map(function ($characteristic) use ($record) {
+                            return TextEntry::make("saving_throw_{$characteristic->id}")
+                                ->label("Рят. кидок для {$characteristic->name}")
+                                ->default(in_array($characteristic->id, $record->background->characteristics->pluck('id')->toArray()) ? 'Так' : 'Ні');
+                        })->toArray()
+                    ),
+
+                Section::make('Навички')
+                    ->schema(
+                        fn ($record) => $record->proficiencies->map(function ($proficiency) use ($record) {
+                            $bonus = $record->characteristics
+                                    ->where('id', $proficiency->characteristic_id)
+                                    ->first()->value + (($record->proficiencies->specialize ?? -1) + 1) * 2;
+
+                            return TextEntry::make("proficiency_{$proficiency->id}")
+                                ->label($proficiency->name)
+                                ->default($bonus);
+                        })->toArray()
+                    ),
+
+                Section::make('Мови')
+                    ->schema([
+                        TextEntry::make('languages')
+                            ->label('Мови')
+                            ->default(fn ($record) => $record->languages
+                                ->merge($record->race->languages)
+                                ->pluck('name')
+                                ->join(', ')
+                            ),
+                    ]),
+
+                Section::make('Абілки')
+                    ->schema([
+                        TextEntry::make('abilities')
+                            ->label('Абілки')
+                            ->default(fn ($record) => $record->class->abilities
+                                ->where('level', '<=', $record->level)
+                                ->merge($record->race->abilities->where('level', '<=', $record->level))
+                                ->pluck('name')
+                                ->join(', ')
+                            ),
+                    ]),
             ]);
     }
 
@@ -531,6 +623,7 @@ class CharacterResource extends Resource
             'index' => Pages\ListCharacters::route('/'),
             'create' => Pages\CreateCharacter::route('/create'),
             'edit' => Pages\EditCharacter::route('/{record}/edit'),
+            'view' => Pages\ViewCharacter::route('/{record}'),
         ];
     }
 

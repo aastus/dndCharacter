@@ -178,15 +178,29 @@ class CreateCharacter extends CreateRecord
                                 }),
 
                             CheckboxList::make('proficiencies')
+                                ->relationship(name: 'proficiencies', titleAttribute: 'name')
                                 ->label('Володіння')
                                 ->options(function (callable $get) {
                                     return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
                                         ->pluck('name', 'id');
                                 })
-                                ->rules(function (callable $get) {
+                                ->default(function (callable $get) {
+                                    $savedProficiencies = $get('record')?->proficiencies->pluck('id')->toArray() ?? [];
+                                    return $savedProficiencies;
+                                })
+                                ->reactive()
+                                ->afterStateUpdated(function (callable $get, callable $set, $state) {
                                     $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
-                                    return $maxProficiency > 0 ? ['max:' . $maxProficiency] : [];
-                               }),
+                                    $selectedCount = count(array_filter($state, fn($value) => $value !== null));
+
+                                    if ($selectedCount > $maxProficiency) {
+                                        array_pop($state);
+                                        $selectedCount--;
+                                        $set('proficiencies', $state);
+                                    }
+
+                                    $set('selectedProficiencyCount', $selectedCount);
+                                })->columns(3),
                         ])
                         ->afterValidation(function () {
                             $data = $this->form->getState();

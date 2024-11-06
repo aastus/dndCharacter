@@ -56,7 +56,7 @@ return new class extends Migration {
         Schema::create('character_proficiency', function (Blueprint $table) {
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
             $table->foreignId('proficiency_id')->constrained()->onDelete('cascade');
-            $table->boolean('specialize');
+            $table->boolean('specialize')->default(0);
         });
 
         Schema::create('character_ability', function (Blueprint $table) {
