@@ -399,6 +399,7 @@ class CharacterResource extends Resource
                             Forms\Components\Select::make('spell_id')
                                 ->multiple()
                                 ->preload()
+                                ->relationship('spells', 'name')
                                 //                    ->createOptionForm(Characteristic::getForm())
                                 ->searchable()
                                 ->options(function (callable $get) {
