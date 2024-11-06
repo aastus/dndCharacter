@@ -8,35 +8,35 @@ return new class extends Migration {
     public function up(){
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
-            $table->string('character_name', 40);
-            $table->string('name', 40);
+            $table->string('character_name', 40)->nullable();
+            $table->string('name', 40)->nullable();
 
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
             $table->foreignId('race_id')->constrained()->onDelete('cascade');
             $table->foreignId('background_id')->constrained()->onDelete('cascade');
             $table->foreignId('alignment_id')->constrained()->onDelete('cascade');
 
-            $table->unsignedTinyInteger('level');
-            $table->unsignedTinyInteger('armor_type');
-            $table->unsignedTinyInteger('hit_points');
+            $table->unsignedTinyInteger('level')->nullable();
+            $table->unsignedTinyInteger('armor_type')->nullable();
+            $table->unsignedTinyInteger('hit_points')->nullable();
             $table->unsignedTinyInteger('plus_speed')->nullable();
 
-            $table->string('traits', 300);
-            $table->string('ideals', 300);
-            $table->string('bonds', 300);
-            $table->string('flaws', 300);
+            $table->string('traits', 300)->nullable();
+            $table->string('ideals', 300)->nullable();
+            $table->string('bonds', 300)->nullable();
+            $table->string('flaws', 300)->nullable();
 
-            $table->string('prehistory', 300);
-            $table->string('inventory', 300);
-            $table->string('goals', 300);
+            $table->string('prehistory', 300)->nullable();
+            $table->string('inventory', 300)->nullable();
+            $table->string('goals', 300)->nullable();
 
-            $table->unsignedSmallInteger('age');
-            $table->unsignedTinyInteger('height');
-            $table->unsignedTinyInteger('weight');
-            $table->string('eye_color', 30);
-            $table->string('skin_color', 30);
+            $table->unsignedSmallInteger('age')->nullable();
+            $table->unsignedTinyInteger('height')->nullable();
+            $table->unsignedTinyInteger('weight')->nullable();
+            $table->string('eye_color', 30)->nullable();
+            $table->string('skin_color', 30)->nullable();
             $table->string('hair_color', 30)->nullable();
-            
+
             $table->string('notes', 500)->nullable();
             $table->timestamps();
         });
