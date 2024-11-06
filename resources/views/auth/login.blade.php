@@ -26,17 +26,10 @@
                                 <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
                             </div>
-
-                            <!-- Remember Me -->
-                            <div class="form-check mt-4">
-                                <input id="remember_me" type="checkbox" class="form-check-input" name="remember">
-                                <label for="remember_me" class="form-check-label">{{ __('Remember me') }}</label>
-                            </div>
-
                             <div class="d-flex align-items-center justify-content-between mt-4">
                                 @if (Route::has('password.request'))
-                                    <a class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" href="{{ route('password.request') }}">
-                                        {{ __('Forgot your password?') }}
+                                    <a class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" href="{{ route('register') }}">
+                                        {{ __('Already registered?') }}
                                     </a>
                                 @endif
 
@@ -44,15 +37,19 @@
                                         <button type="submit">{{ __('Log in') }}</button>
                                     </div>
                             </div>
+                            <center>
                                 @if (\JoelButcher\Socialstream\Socialstream::show())
-                                    <div class="social-login mt-4">
+                                <p class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                                    {{ __('Or login via') }}
+                                </p>
+                                    <div class="social-login mt-4 mb-5">
                                         <x-socialstream />
                                     </div>
                                 @endif
+                            </center>
                         </form>
 
                     </div>
-                    <!-- ***** Login Form End ***** -->
                 </div>
             </div>
         </div>

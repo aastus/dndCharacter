@@ -8,6 +8,7 @@
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.2",
         "filament/filament": "^3.2",
+        "filament/spatie-laravel-media-library-plugin": "^3.2",
         "hasnayeen/themes": "^3.0",
         "joelbutcher/socialstream": "^6.1",
         "laravel/breeze": "^2.2",

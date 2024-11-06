@@ -134,49 +134,53 @@ class CreateCharacter extends CreateRecord
 
             // Третя вкладка — Характеристики
                     Forms\Components\Wizard\Step::make('Характеристики')
-                        ->schema([
-                            Repeater::make('characteristics')
-                                ->relationship('characteristics')
-                                ->schema([
-                                    Select::make('characteristic_id')
-                                        ->label('')
-                                        ->options(
-                                            Characteristic::pluck('name', 'id')
-                                        )
-                                        ->disabled()
-                                        ->preload()
-                                        ->searchable()->columnSpan(1),
+                            ->schema([
+                                Repeater::make('characteristics')
+                                    ->relationship('characteristics')
+                                    ->schema([
+                                        Select::make('characteristic_id')
+                                            ->label('')
+                                            ->options(Characteristic::pluck('name', 'id'))
+                                            ->disabled()
+                                            ->columnSpan(1),
 
-                                    TextInput::make('input_value') // поле для вводу значення
-                                    ->label('')
-                                        ->reactive() // активуємо оновлення при кожній зміні
-                                        ->afterStateUpdated(fn ($state, $set)
-                                        => $set('value', round(($state - 10) / 2))
-                                        )->columnSpan(1), // оновлюємо calculated_value,
+                                        TextInput::make('value')
+                                            ->label('')
+                                            ->required()
+                                            ->reactive()
+                                            ->afterStateHydrated(fn ($state, $set) => $set('bonus', round(($state-10)/2)))
+                                            ->afterStateUpdated(fn ($state, $set)=> $set('bonus', round(($state-10)/2)))
+                                            ->numeric()
+                                            ->minValue(1)
+                                            ->maxValue(20)
+                                            ->columnSpan(1),
 
-                                    TextInput::make('value') // розраховане значення
-                                    ->label('')
-                                        ->disabled()
-                                        ->columnSpan(1),
-                                ])
-                                ->columns(3) // встановлюємо розмір у три колонки
-                                ->columnSpanFull()
-                                ->reorderable(false)
-                                ->deletable(false)
-                                ->addable(false)
-                                ->default(function () {
-                                    // Витягуємо всі характеристики і створюємо для кожної блок у Repeater
-                                    $characteristics = Characteristic::all()->map(function ($characteristic) {
-                                        return [
-                                            'characteristic_id' => $characteristic->id,
-                                            'characteristic_name' => $characteristic->name, // мапимо назву характеристики
-                                            'input_value' => 10, // дефолтне значення
-                                            'value' => 0, // дефолтне значення
-                                        ];
-                                    });
-                                    return $characteristics->values()->toArray(); // Переконаємося, що повертається чистий масив
-                                }),
-
+                                        TextInput::make('bonus')
+                                            ->label('')
+                                            ->disabled()
+                                            ->columnSpan(1),
+                                    ])
+                                    ->columns(3)
+                                    ->columnSpanFull()
+                                    ->reorderable(false)
+                                    ->deletable(false)
+                                    ->addable(false)
+                                    ->default(function () {
+                                        $characteristics = Characteristic::all()->map(function ($characteristic) {
+                                            return [
+                                                'characteristic_id' => $characteristic->id,
+                                                'characteristic_name' => $characteristic->name,
+                                                'value' => 10
+                                            ];
+                                        });
+                                        return $characteristics->values()->toArray();
+                                    })
+                                    ->afterStateUpdated(function ($state, $record, $get) {
+                                        $characteristicData = collect($state)->mapWithKeys(function ($item) {
+                                            return [$item['characteristic_id'] => ['value' => $item['value']]];
+                                        })->toArray();
+                                        $record->characteristics()->sync($characteristicData);
+                                    }),
                             CheckboxList::make('proficiencies')
                                 ->relationship(name: 'proficiencies', titleAttribute: 'name')
                                 ->label('Володіння')

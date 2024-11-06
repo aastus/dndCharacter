@@ -12,6 +12,7 @@ use App\Models\Race;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -30,6 +31,12 @@ class RaceResource extends Resource
     {
         return $form
             ->schema([
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('images')
+                    ->label('Зображення')
+                    ->disk('public')
+                    ->image()
+                    ->responsiveImages(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(30),

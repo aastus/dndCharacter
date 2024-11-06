@@ -6,8 +6,12 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ClassModel extends Model {
+class ClassModel extends Model implements HasMedia
+{
+    use InteractsWithMedia;
     protected $table = 'classes';
     protected $fillable = ['name', 'description', 'hp_per_level', 'is_magic', 'available_proficiency'];
 

@@ -304,48 +304,51 @@ class CharacterResource extends Resource
                     Forms\Components\Wizard\Step::make('Характеристики')
                         ->schema([
                             Repeater::make('characteristics')
-                                ->relationship('characteristics')
-                                ->schema([
-                                    Select::make('characteristic_id')
-                                        ->label('')
-                                        ->options(
-                                            Characteristic::pluck('name', 'id')
-                                        )
-                                        ->required()
-                                        ->disabled()
-                                        ->preload()
-                                        ->searchable()->columnSpan(1),
+                                        ->relationship('characteristics')
+                                        ->schema([
+                                            Select::make('characteristic_id')
+                                                ->label('')
+                                                ->options(Characteristic::pluck('name', 'id'))
+                                                ->disabled()
+                                                ->columnSpan(1),
 
-                                    TextInput::make('input_value') // поле для вводу значення
-                                    ->label('')
-                                        ->reactive() // активуємо оновлення при кожній зміні
-                                        ->afterStateUpdated(fn ($state, $set)
-                                        => $set('value', round(($state - 10) / 2))
-                                        )->columnSpan(1), // оновлюємо calculated_value,
+                                            TextInput::make('value')
+                                                ->label('')
+                                                ->required()
+                                                ->reactive()
+                                                ->afterStateHydrated(fn ($state, $set) => $set('bonus', round(($state-10)/2)))
+                                                ->afterStateUpdated(fn ($state, $set)=> $set('bonus', round(($state-10)/2)))
+                                                ->numeric()
+                                                ->minValue(1)
+                                                ->maxValue(20)
+                                                ->columnSpan(1),
 
-                                    TextInput::make('value') // розраховане значення
-                                    ->label('')
-                                        ->disabled() // зробимо недоступним для редагування
-                                        ->required()
-                                        ->columnSpan(1),
-                                ])
-                                ->columns(3) // встановлюємо розмір у три колонки
-                                ->columnSpanFull()
-                                ->reorderable(false)
-                                ->deletable(false)
-                                ->addable(false)
-                                ->default(function () {
-                                    // Витягуємо всі характеристики і створюємо для кожної блок у Repeater
-                                    $characteristics = Characteristic::all()->map(function ($characteristic) {
-                                        return [
-                                            'characteristic_id' => $characteristic->id,
-                                            'characteristic_name' => $characteristic->name, // мапимо назву характеристики
-                                            'input_value' => 10, // дефолтне значення
-                                            'value' => 0, // дефолтне значення
-                                        ];
-                                    });
-                                    return $characteristics->values()->toArray(); // Переконаємося, що повертається чистий масив
-                                }),
+                                            TextInput::make('bonus')
+                                                ->label('')
+                                                ->disabled()
+                                                ->columnSpan(1),
+                                        ])
+                                        ->columns(3)
+                                        ->columnSpanFull()
+                                        ->reorderable(false)
+                                        ->deletable(false)
+                                        ->addable(false)
+                                        ->default(function () {
+                                            $characteristics = Characteristic::all()->map(function ($characteristic) {
+                                                return [
+                                                    'characteristic_id' => $characteristic->id,
+                                                    'characteristic_name' => $characteristic->name,
+                                                    'value' => 10
+                                                ];
+                                            });
+                                            return $characteristics->values()->toArray();
+                                        })
+                                        ->afterStateUpdated(function ($state, $record, $get) {
+                                            $characteristicData = collect($state)->mapWithKeys(function ($item) {
+                                                return [$item['characteristic_id'] => ['value' => $item['value']]];
+                                            })->toArray();
+                                            $record->characteristics()->sync($characteristicData);
+                                        }),
 
                             CheckboxList::make('proficiencies')
                                 ->relationship(name: 'proficiencies', titleAttribute: 'name')
@@ -556,7 +559,7 @@ class CharacterResource extends Resource
                     ->schema([
                         TextEntry::make('speed')
                             ->label('Швидкість')
-                            ->default(fn ($record) => $record->class->move_speed + $record->plus_speed),
+                            ->default(fn ($record) => $record->race->move_speed + $record->plus_speed),
                         TextEntry::make('hit_points')
                             ->label('Хіти')
                             ->default(fn ($record) => $record->class->hp_per_level * $record->level),
@@ -567,8 +570,7 @@ class CharacterResource extends Resource
                     ->schema(
                         fn ($record) => $record->characteristics->map(function ($characteristic) {
                             return TextEntry::make("characteristic_{$characteristic->id}")
-                                ->label($characteristic->name)
-                                ->default($characteristic->value);
+                                ->label($characteristic->name . ' => ' . $characteristic->pivot->value);
                         })->toArray()
                     ),
 
@@ -577,22 +579,32 @@ class CharacterResource extends Resource
                         fn ($record) => $record->characteristics->map(function ($characteristic) use ($record) {
                             return TextEntry::make("saving_throw_{$characteristic->id}")
                                 ->label("Рят. кидок для {$characteristic->name}")
-                                ->default(in_array($characteristic->id, $record->background->characteristics->pluck('id')->toArray()) ? 'Так' : 'Ні');
+                                ->default(in_array($characteristic->id, $record->class->savingthrows->pluck('id')->toArray()) ? 'Так' : 'Ні');
                         })->toArray()
                     ),
 
-//                Section::make('Навички')
-//                    ->schema(
-//                        fn ($record) => $record->proficiencies->map(function ($proficiency) use ($record) {
-//                            $bonus = $record->characteristics
-//                                    ->where('id', $proficiency->characteristic_id)
-//                                    ->first()->value + (($record->proficiencies->specialize ?? -1) + 1) * 2;
-//
-//                            return TextEntry::make("proficiency_{$proficiency->id}")
-//                                ->label($proficiency->name)
-//                                ->default($bonus);
-//                        })->toArray()
-//                    ),
+                Section::make('Навички')
+                    ->schema(
+                        fn($record) => Proficiency::all()->map(function ($proficiency) use ($record) {
+                            $existingProficiency = $record->proficiencies->firstWhere('id', $proficiency->id);
+
+                            $characteristicBonus = $record->characteristics
+                                ->where('id', $proficiency->characteristic_id)
+                                ->first()->pivot->value;
+
+                            $prof = $existingProficiency != null;
+                            $spec = ($prof ?  $existingProficiency->pivot->specialize : -1);
+
+                            $bonus = round( ($characteristicBonus - 10) / 2) + ($spec + 1) * 2;
+
+                            return TextEntry::make("proficiency_{$proficiency->id}")
+                                ->label($proficiency->name . ($prof ? '+' : ''))
+                                ->default($bonus)
+                                ->extraAttributes([
+                                    'class' => $prof ? ($spec > 0 ? 'bg-gray-200' : 'bg-gray-400') : 'inherit',
+                                ]);
+                        })->toArray()
+                    ),
 
                 Section::make('Мови')
                     ->schema([
@@ -616,6 +628,29 @@ class CharacterResource extends Resource
                                 ->join(', ')
                             ),
                     ]),
+
+                Section::make('Зброя')
+                    ->schema(
+                        fn ($record) => $record->weapons->map(function ($weapon) use ($record) {
+                            $char = $record->characteristics
+                                ->where('id', $weapon->characteristic_id)
+                                ->first();
+
+                            return TextEntry::make("weapons_{$weapon->id}")
+                                ->label($weapon->name . ' => 1d' . $weapon->damage . ' ' . $char->name . ' +' . floor(($char->pivot->value- 10) / 2));
+                        })->toArray()
+                    ),
+
+                Section::make('Заклинання')
+                    ->schema(
+                        fn ($record) => $record->spells
+                            ->sortBy('level')
+                            ->map(function ($spell) {
+                                return TextEntry::make("spells_{$spell->id}")
+                                    ->label($spell->name . ' => ' . ($spell->level ? ($spell->level . ' рівень') : ' заговір'));
+                            })
+                            ->toArray()
+                    ),
             ]);
     }
 

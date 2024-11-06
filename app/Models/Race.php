@@ -5,8 +5,12 @@ namespace App\Models;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Race extends Model {
+class Race extends Model implements HasMedia
+{
+    use InteractsWithMedia;
     protected $fillable = ['name', 'description', 'move_speed', 'suggested_names', 'available_proficiency'];
 
     public function characters() {

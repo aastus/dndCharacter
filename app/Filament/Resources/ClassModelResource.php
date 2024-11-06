@@ -11,6 +11,7 @@ use App\Models\Spell;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,6 +29,12 @@ class ClassModelResource extends Resource
     {
         return $form
             ->schema([
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('images')
+                    ->label('Зображення')
+                    ->disk('public')
+                    ->image()
+                    ->responsiveImages(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(20),
