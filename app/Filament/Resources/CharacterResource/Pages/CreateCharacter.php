@@ -57,9 +57,10 @@ class CreateCharacter extends CreateRecord
                             ->searchable()
                             ->reactive()
                             ->relationship('class', 'name')
-                            ->afterStateUpdated(function ($get, $set) {
+                            ->afterStateUpdated(function ($state, $get, $set) {
                                 self::updateProficiencyList($get, $set);
                                 self::updateSpellsList($get, $set);
+                                self::setMaxHp($state, $set, $get);
                             })
                             ->preload(),
                         Forms\Components\Select::make('race_id')
@@ -94,6 +95,12 @@ class CreateCharacter extends CreateRecord
                         $this->record = new ($this->getModel())($data);
 
                         $this->record->save();
+
+                        $defaultCharacteristics = [];
+                        for ($i = 1; $i <= 6; $i++) {
+                            $defaultCharacteristics[$i] = ['value' => 10];  // 'value' - значення по замовчуванню
+                        }
+                        $this->record->characteristics()->sync($defaultCharacteristics);
                     }),
             // Друга вкладка — Персонаж Інфо
                     Forms\Components\Wizard\Step::make('Персонаж Інфо')
@@ -126,15 +133,35 @@ class CreateCharacter extends CreateRecord
                                 ->preload()
                                 ->columnSpanFull(),
                         ])
-                        ->afterValidation(function () {
+                        ->afterValidation(function (callable $get) {
                             $data = $this->form->getState();
-
                             $this->record->update($data);
+                            $this->record->languages()->sync($get('language_id') ?? []);
                         }),
 
             // Третя вкладка — Характеристики
                     Forms\Components\Wizard\Step::make('Характеристики')
                             ->schema([
+                                TextInput::make('armor_type')
+                                    ->label('КЗ')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(20)
+                                    ->columnSpan(1),
+
+                                TextInput::make('hit_points')
+                                    ->label('ХП')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(fn ($get) => $get('max_hp'))
+                                    ->columnSpan(1),
+
+                                TextInput::make('plus_speed')
+                                    ->label('Додаткова швидкість')
+                                    ->numeric()
+                                    ->maxValue(50)
+                                    ->default(0)
+                                    ->columnSpan(1),
                                 Repeater::make('characteristics')
                                     ->relationship('characteristics')
                                     ->schema([
@@ -177,9 +204,9 @@ class CreateCharacter extends CreateRecord
                                     })
                                     ->afterStateUpdated(function ($state, $record, $get) {
                                         $characteristicData = collect($state)->mapWithKeys(function ($item) {
-                                            return [$item['characteristic_id'] => ['value' => $item['value']]];
+                                            return [$item['characteristic_id'] => ['value' => $item['value'] ?? 10]];
                                         })->toArray();
-                                        $record->characteristics()->sync($characteristicData);
+                                        $this->record->characteristics()->sync($characteristicData);
                                     }),
                             CheckboxList::make('proficiencies')
                                 ->relationship(name: 'proficiencies', titleAttribute: 'name')
@@ -194,15 +221,16 @@ class CreateCharacter extends CreateRecord
                                 })
                                 ->reactive()
                                 ->afterStateUpdated(function (callable $get, callable $set, $state) {
+                                    $state = array_filter($state ?? [], fn($value) => $value != null);
                                     $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
-                                    $selectedCount = count(array_filter($state, fn($value) => $value !== null));
+                                    $selectedCount = count($state);
 
                                     if ($selectedCount > $maxProficiency) {
                                         array_pop($state);
                                         $selectedCount--;
-                                        $set('proficiencies', $state);
                                     }
 
+                                    $set('proficiencies', $state);
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
                             TextInput::make('selectedProficiencyCount')
@@ -214,10 +242,14 @@ class CreateCharacter extends CreateRecord
                                     return "з $maxCount";
                                 }),
                         ])
-                        ->afterValidation(function () {
+                        ->afterValidation(function (callable $get) {
                             $data = $this->form->getState();
 
                             $this->record->update($data);
+
+                            $selectedProficiencies = array_filter($get('proficiencies'), fn($value) => $value !== null);
+
+                            $this->record->proficiencies()->sync($selectedProficiencies);
                         }),
             // Четверта вкладка — Зброя і Заклинання
                     Forms\Components\Wizard\Step::make('Зброя і Заклинання')
@@ -246,10 +278,13 @@ class CreateCharacter extends CreateRecord
                                 ->preload()
                                 ->columnSpanFull(),
                         ])
-                        ->afterValidation(function () {
+                        ->afterValidation(function (callable $get) {
                             $data = $this->form->getState();
 
                             $this->record->update($data);
+
+                            $this->record->weapons()->sync($get('weapon_id') ?? []);
+                            $this->record->spells()->sync($get('spell_id') ?? []);
                         }),
 
             // П’ята вкладка — Вигляд
@@ -348,5 +383,11 @@ class CreateCharacter extends CreateRecord
     protected static function availableSpels($classId, $level) {
         $is_magic = (ClassModel::find($classId)->is_magic ?? 0) + 1;
         return ClassModel::find($classId)?->spells()->where('level', '<=', floor(($level - 1) / 2 * $is_magic) + 1)->pluck('id') ?? [];
+    }
+
+    protected static function setMaxHp($state, $set, $get){
+        $max_hp = ClassModel::find($state)->hp_per_level ?? 1 * $get('level');
+        $set('max_value', $max_hp);
+        $set('hit_points', $max_hp);
     }
 }

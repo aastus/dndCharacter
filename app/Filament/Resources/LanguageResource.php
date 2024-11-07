@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LanguageResource\Pages;
 use App\Filament\Resources\LanguageResource\RelationManagers;
 use App\Models\Language;
+use App\Models\Race;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,6 +27,13 @@ class LanguageResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(25),
+                Forms\Components\Select::make('races')
+                    ->label('Доступні Володіння')
+                    ->multiple()
+                    ->searchable()
+                    ->relationship('races', 'name')
+                    ->options(Race::all()->pluck('name', 'id'))
+                    ->preload(),
             ]);
     }
 
@@ -33,8 +41,10 @@ class LanguageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TagsColumn::make('races.name')
+                    ->searchable()
+                    ->separator(', '),
             ])
             ->filters([
                 //

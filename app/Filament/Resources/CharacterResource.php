@@ -37,181 +37,6 @@ class CharacterResource extends Resource
 
     public static function form(Form $form): Form
     {
-//        return $form
-//            ->schema([
-//                Forms\Components\TextInput::make('character_name')
-//                    ->required()
-//                    ->maxLength(40),
-//                Forms\Components\TextInput::make('name')
-//                    ->required()
-//                    ->maxLength(40),
-//                Forms\Components\TextInput::make('level')
-//                    ->required()
-//                    ->default(1)
-//                    ->afterStateUpdated(fn ($get, $set) => self::updateSpellsList($get, $set))
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('armor_type')
-//                    ->required()
-//                    ->numeric(),
-//                Forms\Components\Select::make('class_id')
-//                    ->required()
-//                    ->createOptionForm(ClassModel::getForm())
-//                    ->searchable()
-//                    ->reactive()
-//                    ->relationship('class', 'name')
-//                    ->afterStateUpdated(function ($get, $set) {
-//                        self::updateProficiencyList($get, $set);
-//                        self::updateSpellsList($get, $set);
-//                    })
-//                    ->preload(),
-//                Forms\Components\Select::make('race_id')
-//                    ->required()
-//                    ->createOptionForm(Race::getForm())
-//                    ->searchable()
-//                    ->reactive()
-//                    ->relationship('race', 'name')
-//                    ->afterStateUpdated(fn ($get, $set) => self::updateProficiencyList($get, $set))
-//                    ->preload(),
-//                Forms\Components\Select::make('background_id')
-//                    ->required()
-//                    ->createOptionForm(Background::getForm())
-//                    ->searchable()
-//                    ->relationship('background', 'name')
-//                    ->preload(),
-//                Forms\Components\Select::make('alignment_id')
-//                    ->required()
-//                    ->createOptionForm(Alignment::getForm())
-//                    ->searchable()
-//                    ->relationship('alignment', 'name')
-//                    ->preload(),
-//                Repeater::make('characteristics')
-//                    ->relationship('characteristics')
-//                    ->schema([
-//                        Select::make('characteristic_id')
-//                            ->label('')
-//                            ->options(
-//                                Characteristic::pluck('name', 'id')
-//                            )
-//                            ->required()
-//                            ->disabled()
-//                            ->preload()
-//                            ->searchable()->columnSpan(1),
-//
-//                        TextInput::make('input_value') // поле для вводу значення
-//                            ->label('')
-//                            ->reactive() // активуємо оновлення при кожній зміні
-//                            ->afterStateUpdated(fn ($state, $set)
-//                                => $set('value', round(($state - 10) / 2))
-//                            )->columnSpan(1), // оновлюємо calculated_value,
-//
-//                        TextInput::make('value') // розраховане значення
-//                            ->label('')
-//                            ->disabled() // зробимо недоступним для редагування
-//                            ->required()
-//                            ->columnSpan(1),
-//                    ])
-//                    ->columns(3) // встановлюємо розмір у три колонки
-//                    ->columnSpanFull()
-//                    ->reorderable(false)
-//                    ->deletable(false)
-//                    ->addable(false)
-//                    ->default(function () {
-//                        // Витягуємо всі характеристики і створюємо для кожної блок у Repeater
-//                        $characteristics = Characteristic::all()->map(function ($characteristic) {
-//                            return [
-//                                'characteristic_id' => $characteristic->id,
-//                                'characteristic_name' => $characteristic->name, // мапимо назву характеристики
-//                                'input_value' => 10, // дефолтне значення
-//                                'value' => 0, // дефолтне значення
-//                            ];
-//                        });
-//                        return $characteristics->values()->toArray(); // Переконаємося, що повертається чистий масив
-//                    }),
-//
-//                CheckboxList::make('proficiencies')
-//                    ->label('Володіння')
-//                    ->options(function (callable $get) {
-//                        return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
-//                            ->pluck('name', 'id');
-//                    })
-//                    ->rules(function (callable $get) {
-//                        $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
-//                        return $maxProficiency > 0 ? ['max:' . $maxProficiency] : [];
-//                    }),
-//
-//                Forms\Components\Select::make('weapon_id')
-//                    ->multiple()
-//                    ->preload()
-////                    ->createOptionForm(Characteristic::getForm())
-//                    ->searchable()
-//                    ->relationship('weapons', 'name')
-//                    ->preload()
-//                    ->columnSpanFull(),
-//                Forms\Components\Select::make('language_id')
-//                    ->multiple()
-//                    ->preload()
-////                    ->createOptionForm(Characteristic::getForm())
-//                    ->searchable()
-//                    ->relationship('languages', 'name')
-//                    ->preload()
-//                    ->columnSpanFull(),
-//                Forms\Components\Select::make('spell_id')
-//                    ->multiple()
-//                    ->preload()
-////                    ->createOptionForm(Characteristic::getForm())
-//                    ->searchable()
-//                    ->options(function (callable $get) {
-//                        return Spell::whereIn('id', self::availableSpels($get('class_id'), $get('level')))
-//                            ->pluck('name', 'id');
-//                    })
-//                    ->preload()
-//                    ->columnSpanFull(),
-//                Forms\Components\TextInput::make('hit_points')
-//                    ->required()
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('plus_speed')
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('traits')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('ideals')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('bonds')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('flaws')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('prehistory')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('inventory')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('goals')
-//                    ->required()
-//                    ->maxLength(300),
-//                Forms\Components\TextInput::make('age')
-//                    ->required()
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('height')
-//                    ->required()
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('weight')
-//                    ->required()
-//                    ->numeric(),
-//                Forms\Components\TextInput::make('eye_color')
-//                    ->required()
-//                    ->maxLength(30),
-//                Forms\Components\TextInput::make('skin_color')
-//                    ->required()
-//                    ->maxLength(30),
-//                Forms\Components\TextInput::make('hair_color')
-//                    ->maxLength(30),
-//                Forms\Components\TextInput::make('notes')
-//                    ->maxLength(500),
-//            ]);
         return $form
             ->schema([
                 Forms\Components\Wizard::make([
@@ -232,9 +57,13 @@ class CharacterResource extends Resource
                                 ->searchable()
                                 ->reactive()
                                 ->relationship('class', 'name')
-                                ->afterStateUpdated(function ($get, $set) {
+                                ->afterStateHydrated(fn ($state, $set, $get) => self::setMaxHp($state, $set, $get))
+                                ->afterStateUpdated(function ($state, $get, $set, $record) {
                                     self::updateProficiencyList($get, $set);
                                     self::updateSpellsList($get, $set);
+                                    self::setMaxHp($state, $set, $get);
+                                    $record->proficiencies()->sync([]);
+                                    $record->spells()->sync([]);
                                 })
                                 ->preload(),
                             Forms\Components\Select::make('race_id')
@@ -303,6 +132,28 @@ class CharacterResource extends Resource
                     // Третя вкладка — Характеристики
                     Forms\Components\Wizard\Step::make('Характеристики')
                         ->schema([
+                            TextInput::make('armor_type')
+                                ->label('КЗ')
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxValue(20)
+                                ->columnSpan(1),
+
+                            TextInput::make('hit_points')
+                                ->label('ХП')
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxValue(fn ($get) => $get('max_hp'))
+                                ->columnSpan(1),
+
+                            TextInput::make('plus_speed')
+                                ->label('Додаткова швидкість')
+                                ->numeric()
+                                ->maxValue(50)
+                                ->default(0)
+                                ->columnSpan(1),
                             Repeater::make('characteristics')
                                         ->relationship('characteristics')
                                         ->schema([
@@ -363,15 +214,16 @@ class CharacterResource extends Resource
                                 })
                                 ->reactive()
                                 ->afterStateUpdated(function (callable $get, callable $set, $state) {
+                                    $state = array_filter($state ?? [], fn($value) => $value != null);
                                     $maxProficiency = self::getTotalAvailableProficiency($get('race_id'), $get('class_id'));
-                                    $selectedCount = count(array_filter($state, fn($value) => $value !== null));
+                                    $selectedCount = count($state);
 
                                     if ($selectedCount > $maxProficiency) {
                                         array_pop($state);
                                         $selectedCount--;
-                                        $set('proficiencies', $state);
                                     }
 
+                                    $set('proficiencies', $state);
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
                             TextInput::make('selectedProficiencyCount')
@@ -557,14 +409,17 @@ class CharacterResource extends Resource
 
                 Section::make('Статистика')
                     ->schema([
+                        TextEntry::make('hp')
+                            ->label('Хіти')
+                            ->default(fn ($record) => $record->hit_points . ' | ' . $record->class->hp_per_level * $record->level),
+                        TextEntry::make('armor_type')
+                            ->label('КЗ')
+                            ->default(fn ($record) => $record->armor_type),
                         TextEntry::make('speed')
                             ->label('Швидкість')
                             ->default(fn ($record) => $record->race->move_speed + $record->plus_speed),
-                        TextEntry::make('hit_points')
-                            ->label('Хіти')
-                            ->default(fn ($record) => $record->class->hp_per_level * $record->level),
                     ])
-                    ->columns(2),
+                    ->columns(3),
 
                 Section::make('Характеристики')
                     ->schema(
@@ -702,11 +557,16 @@ class CharacterResource extends Resource
     protected static function updateSpellsList(callable $get, callable $set) {
         $classId = $get('class_id') ?? null;
         $level = $get('level');
-        $set('proficiencies', collect(self::availableSpels($classId, $level))->pluck('id')->all());
+        $set('spells', collect(self::availableSpels($classId, $level))->pluck('id')->all());
     }
 
     protected static function availableSpels($classId, $level) {
         $is_magic = (ClassModel::find($classId)->is_magic ?? 0) + 1;
         return ClassModel::find($classId)?->spells()->where('level', '<=', floor(($level - 1) / 2 * $is_magic) + 1)->pluck('id') ?? [];
+    }
+    protected static function setMaxHp($state, $set, $get){
+        $max_hp = ClassModel::find($state)->hp_per_level ?? 1 * $get('level');
+        $set('max_value', $max_hp);
+        $set('hit_points', $max_hp);
     }
 }
