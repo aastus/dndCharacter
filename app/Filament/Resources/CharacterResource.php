@@ -46,7 +46,8 @@ class CharacterResource extends Resource
                             Forms\Components\TextInput::make('character_name')
                                 ->label('Character name')
                                 ->required()
-                                ->maxLength(40),
+                                ->maxLength(40)
+                                ->hint(fn ($get) => $get('suggested_names') ? 'Suggested: ' . $get('suggested_names') : ''),
                             Forms\Components\TextInput::make('name')
                                 ->label('Name')
                                 ->required()
@@ -67,12 +68,17 @@ class CharacterResource extends Resource
                                 })
                                 ->preload(),
                             Forms\Components\Select::make('race_id')
+                                ->label('Race')
                                 ->required()
                                 ->createOptionForm(Race::getForm())
                                 ->searchable()
                                 ->reactive()
+                                ->default(1)
                                 ->relationship('race', 'name')
-                                ->afterStateUpdated(fn ($get, $set) => self::updateProficiencyList($get, $set))
+                                ->afterStateUpdated(function ($state, $get, $set) {
+                                    self::updateProficiencyList($get, $set);
+                                    self::setSugNames($state, $set);
+                                })
                                 ->preload(),
                             Forms\Components\Select::make('background_id')
                                 ->required()
@@ -568,5 +574,13 @@ class CharacterResource extends Resource
         $max_hp = ClassModel::find($state)->hp_per_level ?? 1 * $get('level');
         $set('max_value', $max_hp);
         $set('hit_points', $max_hp);
+    }
+    protected static function setSugNames($state, $set){
+        $race = Race::find($state);
+
+        if ($race)
+            $set('suggested_names', $race->suggested_names);
+        else
+            $set('suggested_names', null);
     }
 }

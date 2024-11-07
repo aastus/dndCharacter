@@ -43,10 +43,11 @@ class CreateCharacter extends CreateRecord
                 Forms\Components\Wizard\Step::make('Основна')
                     ->columns(2)
                     ->schema([
-                        Forms\Components\TextInput::make('character_name')
-                            ->label('Character name')
+                        TextInput::make('character_name')
+                            ->label('Character Name')
                             ->required()
-                            ->maxLength(40),
+                            ->maxLength(40)
+                            ->hint(fn ($get) => $get('suggested_names') ? 'Suggested: ' . $get('suggested_names') : ''),
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->required()
@@ -64,13 +65,18 @@ class CreateCharacter extends CreateRecord
                             })
                             ->preload(),
                         Forms\Components\Select::make('race_id')
+                            ->label('Race')
                             ->required()
-                            ->createOptionForm(Race::getForm())
                             ->searchable()
+                            ->preload()
                             ->reactive()
+                            ->default(1)
                             ->relationship('race', 'name')
-                            ->afterStateUpdated(fn ($get, $set) => self::updateProficiencyList($get, $set))
-                            ->preload(),
+                            ->afterStateHydrated(fn($state, $set) => self::setSugNames($state, $set))
+                            ->afterStateUpdated(function ($state, callable $set, $get) {
+                                self::updateProficiencyList($get, $set);
+                                self::setSugNames($state, $set);
+                            }),
                         Forms\Components\Select::make('background_id')
                             ->required()
                             ->createOptionForm(Background::getForm())
@@ -389,5 +395,13 @@ class CreateCharacter extends CreateRecord
         $max_hp = ClassModel::find($state)->hp_per_level ?? 1 * $get('level');
         $set('max_value', $max_hp);
         $set('hit_points', $max_hp);
+    }
+    protected static function setSugNames($state, $set){
+        $race = Race::find($state);
+
+        if ($race)
+            $set('suggested_names', $race->suggested_names);
+        else
+            $set('suggested_names', null);
     }
 }

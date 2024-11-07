@@ -49,4 +49,7 @@ class Race extends Model implements HasMedia
                 ->numeric(),
         ];
     }
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('image')->singleFile();
+    }
 }

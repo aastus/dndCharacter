@@ -51,4 +51,8 @@ class ClassModel extends Model implements HasMedia
                 ->required(),
         ];
     }
+
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('image')->singleFile();
+    }
 }
