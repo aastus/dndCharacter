@@ -31,7 +31,7 @@ class BackgroundResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\Select::make('proficiencies')
-                    ->label('Доступні Володіння')
+                    ->label('Available Proficiency')
                     ->multiple()
 //                    ->createOptionForm(Proficiency::getForm())
                     ->searchable()

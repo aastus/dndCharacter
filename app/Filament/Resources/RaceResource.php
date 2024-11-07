@@ -58,7 +58,7 @@ class RaceResource extends Resource
                     ->preload(),
 
                 Select::make('abilities')
-                    ->label('Доступні Вміння')
+                    ->label('Available Abilities')
                     ->multiple()
 //                    ->createOptionForm(Ability::getForm())
                     ->searchable()
@@ -67,7 +67,7 @@ class RaceResource extends Resource
                     ->preload(),
 
                 Select::make('proficiencies')
-                    ->label('Доступні Володіння')
+                    ->label('Available Proficiency')
                     ->multiple()
 //                    ->createOptionForm(Proficiency::getForm())
                     ->searchable()
@@ -75,28 +75,29 @@ class RaceResource extends Resource
                     ->options(Proficiency::all()->pluck('name', 'id'))
                     ->preload(),
                 Forms\Components\TextInput::make('available_proficiency')
+                    ->label('Available Proficiency Count')
                     ->required()
                     ->default(0)
                     ->numeric(),
 
                 Repeater::make('characteristics')
                     ->relationship('characteristics')
-                    ->label('Характеристики')
+                    ->label('Characteristics')
                     ->schema([
                         Select::make('characteristic_id')
-                            ->label('Характеристика')
+                            ->label('Characteristic')
                             ->options(Characteristic::all()->pluck('name', 'id'))
                             ->required()
                             ->searchable(),
 
                         TextInput::make('value')
-                            ->label('Значення')
+                            ->label('Value')
                             ->required()
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(10),
                     ])
-                    ->createItemButtonLabel('Додати характеристику')
+                    ->createItemButtonLabel('Add Characteristic')
             ]);
     }
 

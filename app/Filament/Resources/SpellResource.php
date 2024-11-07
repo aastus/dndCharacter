@@ -34,8 +34,7 @@ class SpellResource extends Resource
                     ->numeric(),
                 Forms\Components\MultiSelect::make('classes')
                     ->relationship('classes', 'name')
-                    ->label('Класи, що мають це заклинання')
-                    ->placeholder('Виберіть класи...')
+                    ->label('Spell available for classes')
                     ->preload()
                     ->searchable(),
             ]);

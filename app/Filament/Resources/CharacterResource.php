@@ -139,7 +139,7 @@ class CharacterResource extends Resource
                     Forms\Components\Wizard\Step::make('Характеристики')
                         ->schema([
                             TextInput::make('armor_type')
-                                ->label('КЗ')
+                                ->label('Armor Type')
                                 ->required()
                                 ->numeric()
                                 ->minValue(1)
@@ -147,7 +147,7 @@ class CharacterResource extends Resource
                                 ->columnSpan(1),
 
                             TextInput::make('hit_points')
-                                ->label('ХП')
+                                ->label('Hit points')
                                 ->required()
                                 ->numeric()
                                 ->minValue(1)
@@ -155,7 +155,7 @@ class CharacterResource extends Resource
                                 ->columnSpan(1),
 
                             TextInput::make('plus_speed')
-                                ->label('Додаткова швидкість')
+                                ->label('Plus Speed')
                                 ->numeric()
                                 ->maxValue(50)
                                 ->default(0)
@@ -209,7 +209,7 @@ class CharacterResource extends Resource
 
                             CheckboxList::make('proficiencies')
                                 ->relationship(name: 'proficiencies', titleAttribute: 'name')
-                                ->label('Володіння')
+                                ->label('Proficiency')
                                 ->options(function (callable $get) {
                                     return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
                                         ->pluck('name', 'id');
@@ -233,7 +233,7 @@ class CharacterResource extends Resource
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
                             TextInput::make('selectedProficiencyCount')
-                                ->label('Вибрано з доступних')
+                                ->label('Selected from available')
                                 ->extraInputAttributes(['readonly' => true]) // Робимо поле лише для читання
                                 ->reactive()
                                 ->suffix(function (callable $get) {
@@ -297,9 +297,6 @@ class CharacterResource extends Resource
                             Forms\Components\TextInput::make('hair_color')
                                 ->label('Hair Color')
                                 ->maxLength(30),
-                            Forms\Components\FileUpload::make('photo')
-                                ->label('Photo')
-                                ->image(),
                         ]),
 
                     // Шоста вкладка — Нотатки
@@ -419,10 +416,10 @@ class CharacterResource extends Resource
                             ->label('Хіти')
                             ->default(fn ($record) => $record->hit_points . ' | ' . $record->class->hp_per_level * $record->level),
                         TextEntry::make('armor_type')
-                            ->label('КЗ')
+                            ->label('Armor Type')
                             ->default(fn ($record) => $record->armor_type),
                         TextEntry::make('speed')
-                            ->label('Швидкість')
+                            ->label('Speed')
                             ->default(fn ($record) => $record->race->move_speed + $record->plus_speed),
                     ])
                     ->columns(3),

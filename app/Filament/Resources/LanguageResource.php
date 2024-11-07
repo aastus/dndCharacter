@@ -28,7 +28,7 @@ class LanguageResource extends Resource
                     ->required()
                     ->maxLength(25),
                 Forms\Components\Select::make('races')
-                    ->label('Доступні Володіння')
+                    ->label('Available Races')
                     ->multiple()
                     ->searchable()
                     ->relationship('races', 'name')

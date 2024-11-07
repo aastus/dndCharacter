@@ -48,7 +48,7 @@ class ClassModelResource extends Resource
                 Forms\Components\Toggle::make('is_magic')
                     ->required(),
                 Select::make('abilities')
-                    ->label('Доступні Вміння')
+                    ->label('Available Abilities')
                     ->multiple()
 //                    ->createOptionForm(Ability::getForm())
                     ->searchable()
@@ -57,7 +57,7 @@ class ClassModelResource extends Resource
                     ->preload(),
 
                 Select::make('spells')
-                    ->label('Доступні Заклинання')
+                    ->label('Available Spells')
                     ->multiple()
 //                    ->createOptionForm(Spell::getForm())
                     ->searchable()
@@ -65,12 +65,13 @@ class ClassModelResource extends Resource
                     ->options(Spell::all()->pluck('name', 'id'))
                     ->preload(),
                 Forms\Components\TextInput::make('available_proficiency')
+                    ->label('Available Proficiency Count')
                     ->required()
                     ->default(0)
                     ->numeric(),
 
                 Select::make('proficiencies')
-                    ->label('Доступні Володіння')
+                    ->label('Available Proficiency')
                     ->multiple()
 //                    ->createOptionForm(Proficiency::getForm())
                     ->searchable()

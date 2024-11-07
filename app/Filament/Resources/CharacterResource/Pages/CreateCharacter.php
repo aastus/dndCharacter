@@ -149,21 +149,21 @@ class CreateCharacter extends CreateRecord
                     Forms\Components\Wizard\Step::make('Характеристики')
                             ->schema([
                                 TextInput::make('armor_type')
-                                    ->label('КЗ')
+                                    ->label('Armor Type')
                                     ->numeric()
                                     ->minValue(1)
                                     ->maxValue(20)
                                     ->columnSpan(1),
 
                                 TextInput::make('hit_points')
-                                    ->label('ХП')
+                                    ->label('Hit points')
                                     ->numeric()
                                     ->minValue(1)
                                     ->maxValue(fn ($get) => $get('max_hp'))
                                     ->columnSpan(1),
 
                                 TextInput::make('plus_speed')
-                                    ->label('Додаткова швидкість')
+                                    ->label('Plus Speed')
                                     ->numeric()
                                     ->maxValue(50)
                                     ->default(0)
@@ -216,7 +216,7 @@ class CreateCharacter extends CreateRecord
                                     }),
                             CheckboxList::make('proficiencies')
                                 ->relationship(name: 'proficiencies', titleAttribute: 'name')
-                                ->label('Володіння')
+                                ->label('Proficiency')
                                 ->options(function (callable $get) {
                                     return Proficiency::whereIn('id', self::availableProficiencies($get('race_id'), $get('class_id')))
                                         ->pluck('name', 'id');
@@ -240,7 +240,7 @@ class CreateCharacter extends CreateRecord
                                     $set('selectedProficiencyCount', $selectedCount);
                                 })->columns(3),
                             TextInput::make('selectedProficiencyCount')
-                                ->label('Вибрано з доступних')
+                                ->label('Selected from available')
                                 ->extraInputAttributes(['readonly' => true]) // Робимо поле лише для читання
                                 ->reactive()
                                 ->suffix(function (callable $get) {
@@ -315,9 +315,6 @@ class CreateCharacter extends CreateRecord
                             Forms\Components\TextInput::make('hair_color')
                                 ->label('Hair Color')
                                 ->maxLength(30),
-                            Forms\Components\FileUpload::make('photo')
-                                ->label('Photo')
-                                ->image(),
                         ])
                         ->afterValidation(function () {
                             $data = $this->form->getState();
