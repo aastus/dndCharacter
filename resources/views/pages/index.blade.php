@@ -25,36 +25,123 @@
                     </div>
                 </div>
             </div>
-
+            <!-- ***** Featured Games Start ***** -->
+{{--            <div class="row mt-5">--}}
+{{--                <div class="col-lg-8">--}}
+{{--                    <div class="featured-games header-text">--}}
+{{--                        <div class="heading-section">--}}
+{{--                            <h4><em>Common</em> Races</h4>--}}
+{{--                        </div>--}}
+{{--                        <div class="owl-features owl-carousel">--}}
+{{--                            @foreach($races as $race)--}}
+{{--                            <div class="item">--}}
+{{--                                <div class="">--}}
+{{--                                    <img class="w-100 h-100 img-cover" src="{{ $race->getFirstMediaUrl('images') ?: asset('assets/images/featured-01.jpg') }}" alt="">--}}
+{{--                                    <div class="hover-effect">--}}
+{{--                                        <h6>2.4K Streaming</h6>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <h4>CS-GO<br><span>249K Downloads</span></h4>--}}
+{{--                                <ul>--}}
+{{--                                    <li><i class="fa fa-star"></i> 4.8</li>--}}
+{{--                                    <li><i class="fa fa-download"></i> 2.3M</li>--}}
+{{--                                </ul>--}}
+{{--                            </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-4">--}}
+{{--                    <div class="top-downloaded">--}}
+{{--                        <div class="heading-section">--}}
+{{--                            <h4><em>Top</em> Classes</h4>--}}
+{{--                        </div>--}}
+{{--                        <ul>--}}
+{{--                            @foreach($classes as $class)--}}
+{{--                            <li>--}}
+{{--                                <img class="templatemo-item" src="{{ $race->getFirstMediaUrl('images') ?: asset('assets/images/game-01.jpg') }}" alt="">--}}
+{{--                                <h4>{{$class->name}}</h4>--}}
+{{--                                <h6>{{$class->hp_per_level}} HP</h6>--}}
+{{--                                <span><i class="fa fa-star" style="color: yellow;"></i> 4.9</span>--}}
+{{--                                <span><i class="fa fa-download" style="color: #ec6090;"></i> 2.2M</span>--}}
+{{--                                <div class="download">--}}
+{{--                                    <a href="#"><i class="fa fa-download"></i></a>--}}
+{{--                                </div>--}}
+{{--                            </li>--}}
+{{--                            @endforeach--}}
+{{--                        </ul>--}}
+{{--                        <div class="text-button">--}}
+{{--                            <a href="profile.html">View All</a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+            <!-- ***** Featured Games End ***** -->
           <!-- ***** Most Popular Start ***** -->
-          <div class="most-popular">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="heading-section">
-                  <h4><em>Найбільш популярні</em> Раси</h4>
+{{--          <div class="most-popular">--}}
+{{--            <div class="row">--}}
+{{--              <div class="col-lg-12">--}}
+{{--                <div class="heading-section">--}}
+{{--                  <h4><em>Найбільш популярні</em> Раси</h4>--}}
+{{--                </div>--}}
+{{--                <div class="row">--}}
+{{--                  <div class="col-lg-3 col-sm-6">--}}
+{{--                    <div class="item">--}}
+{{--                      <img src="assets/images/popular-01.jpg" alt="">--}}
+{{--                      <h4>Fortnite<br><span>Sandbox</span></h4>--}}
+{{--                      <ul>--}}
+{{--                        <li><i class="fa fa-star"></i> 4.8</li>--}}
+{{--                        <li><i class="fa fa-download"></i> 2.3M</li>--}}
+{{--                      </ul>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                  <div class="col-lg-12">--}}
+{{--                    <div class="main-button">--}}
+{{--                      <a href="browse.html">Discover Popular</a>--}}
+{{--                    </div>--}}
+{{--                  </div>--}}
+{{--                </div>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+{{--          </div>--}}
+          <!-- ***** Most Popular End ***** -->
+            <div class="live-stream">
+                <div class="col-lg-12">
+                    <div class="heading-section">
+                        <h4><em>Most Popular</em> Races</h4>
+                    </div>
                 </div>
                 <div class="row">
-                  <div class="col-lg-3 col-sm-6">
-                    <div class="item">
-                      <img src="assets/images/popular-01.jpg" alt="">
-                      <h4>Fortnite<br><span>Sandbox</span></h4>
-                      <ul>
-                        <li><i class="fa fa-star"></i> 4.8</li>
-                        <li><i class="fa fa-download"></i> 2.3M</li>
-                      </ul>
+                    @foreach($races as $race)
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <img src="{{ $race->getFirstMediaUrl('images') ?: asset('assets/images/stream-05.jpg') }}" alt="">
+                                <div class="hover-effect">
+                                    <div class="content">
+                                        <div class="live">
+                                            <a href="#">{{$race->name}}</a>
+                                        </div>
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
+                                            <li><a href="#"><i class="fa fa-gamepad"></i> CS-GO</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="down-content">
+                                <h4>{{$race->name}}</h4>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="main-button">
-                      <a href="browse.html">Discover Popular</a>
+                    @endforeach
+                    <div class="col-lg-12">
+                        <div class="main-button">
+                            <a href="streams.html">Load More Streams</a>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <!-- ***** Most Popular End ***** -->
-
           <!-- ***** Gaming Library Start ***** -->
           <div class="gaming-library">
             <div class="col-lg-12">

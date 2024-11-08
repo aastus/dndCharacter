@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassModel;
 use App\Models\Race;
-use App\Models\Tag;
-use App\Models\Like;
-use App\Models\Post;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +13,12 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
+        $races = Race::query()->orderBy('created_at', 'desc')->paginate(8);
+        $classes = ClassModel::query()->orderBy('created_at', 'desc')->paginate(3);
 
         return view('pages.index', [
             'races' => $races,
+            'classes' => $classes,
         ]);
     }
 

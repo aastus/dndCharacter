@@ -313,13 +313,6 @@ class CharacterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-//            ->query(function (Builder $query) {
-//                if (auth()->check() && auth()->user()->hasRole('super_admin')) {
-//                    return $query;
-//                }
-//
-//                return $query->where('user_id', auth()->id());
-//            })
             ->query(
                 auth()->check() && auth()->user()->hasRole('super_admin')
                     ? \App\Models\Character::query()
@@ -426,12 +419,12 @@ class CharacterResource extends Resource
                     ->schema([
                         TextEntry::make('hp')
                             ->label('Хіти')
-                            ->default(fn ($record) => $record->hit_points . ' | ' . $record->class->hp_per_level * $record->level),
+                            ->default(fn ($record) => $record->hit_points . ' | ' . $record->class->hp_per_level * $record->level + floor(($record->characteristics[2]->pivot->value - 10) / 2)),
                         TextEntry::make('armor_type')
-                            ->label('Armor Type')
+                            ->label('КЗ')
                             ->default(fn ($record) => $record->armor_type),
                         TextEntry::make('speed')
-                            ->label('Speed')
+                            ->label('Швидкість')
                             ->default(fn ($record) => $record->race->move_speed + $record->plus_speed),
                     ])
                     ->columns(3),

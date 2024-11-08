@@ -158,13 +158,6 @@ class CreateCharacter extends CreateRecord
                                     ->maxValue(20)
                                     ->columnSpan(1),
 
-                                TextInput::make('hit_points')
-                                    ->label('Hit points')
-                                    ->numeric()
-                                    ->minValue(1)
-                                    ->maxValue(fn ($get) => $get('max_hp'))
-                                    ->columnSpan(1),
-
                                 TextInput::make('plus_speed')
                                     ->label('Plus Speed')
                                     ->numeric()
@@ -294,6 +287,8 @@ class CreateCharacter extends CreateRecord
 
                             $this->record->weapons()->sync($get('weapon_id') ?? []);
                             $this->record->spells()->sync($get('spell_id') ?? []);
+                            $this->record->hit_points = $get('hit_points') + floor(($this->record->characteristics[2]->pivot->value - 10) / 2);
+                            $this->record->update();
                         }),
 
             // П’ята вкладка — Вигляд

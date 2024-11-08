@@ -11,5 +11,6 @@ Route::get('/user', function (Request $request) {
 Route::get('/test', function () {
     return response()->json(['message' => 'API route is working']);
 });
+Route::get('/character/short/{id}',[ApiController::class, 'characterShort']);
+Route::get('/character/list/{id}',[ApiController::class, 'characterList']);
 Route::put('/character/{id}',[ApiController::class, 'characterEdit']);
-
