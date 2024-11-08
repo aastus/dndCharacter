@@ -20,13 +20,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-    <!--
 
-    TemplateMo 579 Cyborg Gaming
-
-    https://templatemo.com/tm-579-cyborg-gaming
-
-    -->
     <style>
         /* Ваші стилі */
         .header-area .main-nav {
@@ -64,17 +58,7 @@
             padding: 10px 15px; /* Внутрішні відступи для пунктів меню */
         }
 
-        /*.header-area .main-nav .nav .dropdown-menu li a {*/
-        /*    display: block; !* Зробити посилання на всю ширину *!*/
-        /*    color: #666; !* Колір тексту *!*/
-        /*    text-transform: capitalize; !* Перетворити текст на заголовки *!*/
-        /*    font-size: 14px; !* Розмір шрифту *!*/
-        /*    border-radius: 5px; !* Заокруглені кути *!*/
-        /*    transition: background-color 0.3s ease; !* Анімація для фону *!*/
-        /*}*/
-
         .header-area .main-nav .nav .dropdown-menu li a:hover {
-            background-color: #e75e8d; /* Колір фону при наведенні */
             color: #fff; /* Колір тексту при наведенні */
         }
 
@@ -119,15 +103,18 @@
                             <i class="fa fa-search"></i>
                         </form>
                     </div>
-                    <!-- ***** Search End ***** -->
-                    <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="{{route('home')}}">Home</a></li>
                         <li><a href="browse.html" class="active">Browse</a></li>
                         <li><a href="details.html">Details</a></li>
                         <li><a href="streams.html">Streams</a></li>
-                        <li class="has-sub">
-                            <a href="profile.html" class="profile-menu-trigger">Profile <img src="assets/images/profile-header.jpg" alt=""></a>
+                        @if (app()->getLocale() === 'en')
+                            <li><a href="{{ route('change-locale', 'uk') }}">UK</a></li>
+                        @else
+                            <li><a href="{{ route('change-locale', 'en') }}">EN</a></li>
+                        @endif
+                        <li class="has-sub mt-1">
+                            <a href="profile.html" class="profile-menu-trigger">Profile </a>
                             <ul class="dropdown-menu">
                                 <center>
                                     @if (Route::has('login'))
@@ -166,6 +153,7 @@
                                 </center>
                             </ul>
                         </li>
+
                     </ul>
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -184,9 +172,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-{{--                <p>Copyright © 2036 <a href="#">Cyborg Gaming</a> Company. All rights reserved.--}}
+                <p>Copyright © 2036 <a href="#">Cyborg Gaming</a> Company. All rights reserved.
 
-{{--                    <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">TemplateMo</a> Distributed By <a href="https://themewagon.com" target="_blank" >ThemeWagon</a>--}}
+                    <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">TemplateMo</a> Distributed By <a href="https://themewagon.com" target="_blank" >ThemeWagon</a>
             </div>
         </div>
     </div>

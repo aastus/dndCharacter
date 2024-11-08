@@ -12,7 +12,7 @@ use Request;
 class LocaleMiddleware extends Middleware
 {
 
-    public static $mainLanguage = 'en';
+    public static $mainLanguage = 'uk';
     public static $languages = ['uk', 'en'];
 
     public static function getLocale()
