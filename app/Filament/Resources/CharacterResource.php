@@ -313,6 +313,18 @@ class CharacterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+//            ->query(function (Builder $query) {
+//                if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+//                    return $query;
+//                }
+//
+//                return $query->where('user_id', auth()->id());
+//            })
+            ->query(
+                auth()->check() && auth()->user()->hasRole('super_admin')
+                    ? \App\Models\Character::query()
+                    : \App\Models\Character::where('user_id', auth()->id())
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('character_name')->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),

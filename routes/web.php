@@ -27,6 +27,10 @@ Route::group(
     function () {
         Route::get('locale/{locale}', LocaleController::class)->name('change-locale');
         Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
+        Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
+        Route::get('/details', [HomeController::class, 'details'])->name('details');
+        Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
     }
 );
 

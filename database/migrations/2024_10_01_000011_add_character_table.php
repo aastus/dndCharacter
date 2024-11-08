@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name', 40)->nullable();
 
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('race_id')->constrained()->onDelete('cascade');
             $table->foreignId('background_id')->constrained()->onDelete('cascade');
             $table->foreignId('alignment_id')->constrained()->onDelete('cascade');

@@ -43,6 +43,9 @@ class CreateCharacter extends CreateRecord
                 Forms\Components\Wizard\Step::make('Основна')
                     ->columns(2)
                     ->schema([
+                        Forms\Components\Hidden::make('user_id')
+                            ->default(fn () => auth()->id())
+                            ->required(),
                         TextInput::make('character_name')
                             ->label('Character Name')
                             ->required()

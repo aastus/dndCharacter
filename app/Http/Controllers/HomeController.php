@@ -17,8 +17,43 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
-        
+
         return view('pages.index', [
+            'races' => $races,
+        ]);
+    }
+
+    public function browse(Request $request)
+    {
+        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
+
+        return view('pages.browse', [
+            'races' => $races,
+        ]);
+    }
+
+    public function streams(Request $request)
+    {
+        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
+
+        return view('pages.streams', [
+            'races' => $races,
+        ]);
+    }
+    public function details(Request $request)
+    {
+        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
+
+        return view('pages.details', [
+            'races' => $races,
+        ]);
+    }
+
+    public function profile(Request $request)
+    {
+        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
+
+        return view('pages.profile', [
             'races' => $races,
         ]);
     }

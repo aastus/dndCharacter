@@ -56,10 +56,8 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
-    public function canComment(): bool
-    {
-        // your conditional logic here
-        return true;
+    public function characters() {
+        return $this->hasMany(Character::class);
     }
 
 }

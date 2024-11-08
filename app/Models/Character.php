@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Character extends Model {
     protected $fillable = [
-        'name', 'character_name',
+        'name', 'character_name','user_id',
         'class_id', 'race_id', 'background_id', 'alignment_id',
         'level', 'armor_type', 'hit_points', 'plus_speed',
         'traits', 'ideals', 'bonds', 'flaws',
@@ -17,6 +17,10 @@ class Character extends Model {
 
     public function class() {
         return $this->belongsTo(ClassModel::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     public function race() {
