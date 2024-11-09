@@ -34,5 +34,7 @@ Route::group(
     }
 );
 
+Route::get('/characters/{id}', [HomeController::class, 'character'])->name('characters.show');
+
 require __DIR__.'/auth.php';
 require __DIR__.'/socialstream.php';

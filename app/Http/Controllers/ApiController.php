@@ -21,17 +21,38 @@ class ApiController extends Controller {
 
         $rec['level'] = $character->level;
         $rec['hp'] = $character->hit_points;
-        $rec['max_hp'] = $rec['level'] * ($character->class ? $character->class->hp_per_level : 0)
-            + floor(($character->characteristics[2]->pivot->value - 10) / 2);
+        $rec['max_hp'] = $rec['level'] * $character->class->hp_per_level + floor(($character->characteristics[2]->pivot->value - 10) / 2);
         $rec['at'] = $character->armor_type;
-        $rec['speed'] = $character->race ? $character->race->move_speed : 0;
+        $rec['speed'] = $character->race->move_speed;
         $rec['plus_speed'] = $character->plus_speed;
 
-        $rec['class'] = $character->class ? $character->class->name : null;
-        $rec['race'] = $character->race ? $character->race->name : null;
+        $rec['class'] = $character->class->name;
+        $rec['race'] = $character->race->name;
 
         $rec['inventory'] = $character->inventory;
         $rec['notes'] = $character->notes;
+
+        return response()->json($rec);
+    }
+
+    public function characterFight($id) {
+        $rec = [];
+        $character = Character::find($id);
+
+        if (!$character) {
+            return response()->json(['error' => 'Character not found'], 404);
+        }
+
+        $rec['id'] = $id;
+        $rec['name'] = $character->character_name;
+
+        $rec['initiative'] = floor(($character->characteristics[1]->pivot->value - 10) / 2);
+        $rec['speed'] = $character->race->move_speed + $character->plus_speed ?? 0;
+
+        $rec['hp'] = $character->hit_points;
+        $rec['armor'] = $character->armor_type;
+
+        $rec['class'] = $character->class ? $character->class->name : null;
 
         return response()->json($rec);
     }
@@ -75,6 +96,6 @@ class ApiController extends Controller {
 
     public function characterList($id) {
         $character = Character::find($id);
-        return response()->json($character);
+        return view('character.pdf', compact('character'));
     }
 }

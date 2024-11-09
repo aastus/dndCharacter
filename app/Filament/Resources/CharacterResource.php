@@ -12,6 +12,7 @@ use App\Models\ClassModel;
 use App\Models\Proficiency;
 use App\Models\Race;
 use App\Models\Spell;
+use Mpdf\Mpdf;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -24,10 +25,14 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ButtonAction;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Blade;
 
 class CharacterResource extends Resource
 {
@@ -352,6 +357,20 @@ class CharacterResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('pdf')
+                    ->label('PDF')
+                    ->color('success')
+                    ->icon('heroicon-o-printer')
+                    ->action(function (Model $record) {
+                        return response()->streamDownload(function () use ($record) {
+                            $htmlContent = view('character.pdf', ['character' => $record])->render();
+
+                            $mpdf = new Mpdf();
+                            $mpdf->WriteHTML($htmlContent);
+                            echo $mpdf->Output('', 'S'); // 'S' returns the PDF as a string
+                        }, 'персонаж '. $record->name . '.pdf');
+                    })
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

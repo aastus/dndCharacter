@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Character;
 use App\Models\ClassModel;
 use App\Models\Race;
 use Illuminate\Http\Request;
@@ -170,5 +171,12 @@ class HomeController extends Controller
             ]);
             return response()->json(['status' => 'liked']);
         }
+    }
+
+    public function character($id)
+    {
+        $character = Character::findOrFail($id);
+
+        return view('character.pdf', compact('character'));
     }
 }

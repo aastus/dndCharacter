@@ -8,9 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API route is working']);
-});
 Route::get('/character/short/{id}',[ApiController::class, 'characterShort']);
 Route::get('/character/list/{id}',[ApiController::class, 'characterList']);
+Route::get('/character/fight/{id}',[ApiController::class, 'characterFight']);
 Route::put('/character/{id}',[ApiController::class, 'characterEdit']);
