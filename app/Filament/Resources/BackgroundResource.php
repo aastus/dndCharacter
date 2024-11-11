@@ -18,8 +18,8 @@ class BackgroundResource extends Resource
 {
     protected static ?string $model = Background::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationGroup = 'Background';
     public static function form(Form $form): Form
     {
         return $form

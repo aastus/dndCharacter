@@ -15,4 +15,7 @@ return [
     'Races' => 'Races',
     'Spells' => 'Spells',
     'Weapons' => 'Weapons',
+    "Types" => "Races & Classes",
+    "Background" => "Character background",
+    "Casts" => "Casts",
 ];

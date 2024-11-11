@@ -14,7 +14,8 @@ use Filament\Tables\Table;
 class CharacteristicResource extends Resource
 {
     protected static ?string $model = Characteristic::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-sparkles';
+    protected static ?string $navigationGroup = 'Characteristics';
 
     public static function form(Form $form): Form
     {

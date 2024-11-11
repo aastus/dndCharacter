@@ -17,8 +17,8 @@ class SpellResource extends Resource
 {
     protected static ?string $model = Spell::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-fire';
+    protected static ?string $navigationGroup = 'Casts';
     public static function form(Form $form): Form
     {
         return $form

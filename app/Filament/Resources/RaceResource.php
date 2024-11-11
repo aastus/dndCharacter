@@ -26,8 +26,8 @@ class RaceResource extends Resource
 {
     protected static ?string $model = Race::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
+    protected static ?string $navigationGroup = 'Types';
     public static function form(Form $form): Form
     {
         return $form

@@ -17,8 +17,8 @@ class AlignmentResource extends Resource
 {
     protected static ?string $model = Alignment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
+    protected static ?string $navigationGroup = 'Background';
     public static function form(Form $form): Form
     {
         return $form

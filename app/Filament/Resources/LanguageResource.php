@@ -18,8 +18,8 @@ class LanguageResource extends Resource
 {
     protected static ?string $model = Language::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
+    protected static ?string $navigationGroup = 'Types';
     public static function form(Form $form): Form
     {
         return $form

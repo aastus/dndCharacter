@@ -19,8 +19,8 @@ class WeaponResource extends Resource
 {
     protected static ?string $model = Weapon::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static ?string $navigationGroup = 'Casts';
     public static function form(Form $form): Form
     {
         return $form

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Character;
+use App\Models\ClassModel;
+use App\Models\Proficiency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,7 +54,8 @@ class ApiController extends Controller {
         $rec['hp'] = $character->hit_points;
         $rec['armor'] = $character->armor_type;
 
-        $rec['class'] = $character->class ? $character->class->name : null;
+        $rec['class'] = $character->class->name;
+        $rec['img'] = ClassModel::find($character->class_id)->getFirstMediaUrl('images');
 
         return response()->json($rec);
     }
@@ -96,6 +99,7 @@ class ApiController extends Controller {
 
     public function characterList($id) {
         $character = Character::find($id);
-        return view('character.pdf', compact('character'));
+        $proficiences = Proficiency::all();
+        return view('character.pdf', compact('character', 'proficiences'));
     }
 }

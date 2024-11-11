@@ -24,8 +24,10 @@ class ClassModelResource extends Resource
 {
     protected static ?string $model = ClassModel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationGroup = 'Types';
 
+    protected static ?string $navigationLabel = 'Classes';
     public static function form(Form $form): Form
     {
         return $form

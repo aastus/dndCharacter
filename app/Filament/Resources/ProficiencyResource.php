@@ -18,8 +18,8 @@ class ProficiencyResource extends Resource
 {
     protected static ?string $model = Proficiency::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationGroup = 'Characteristics';
     public static function form(Form $form): Form
     {
         return $form

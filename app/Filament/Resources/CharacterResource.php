@@ -38,7 +38,7 @@ class CharacterResource extends Resource
 {
     protected static ?string $model = Character::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
     public static function form(Form $form): Form
     {
@@ -363,7 +363,8 @@ class CharacterResource extends Resource
                     ->icon('heroicon-o-printer')
                     ->action(function (Model $record) {
                         return response()->streamDownload(function () use ($record) {
-                            $htmlContent = view('character.pdf', ['character' => $record])->render();
+                            $proficiences = Proficiency::all();
+                            $htmlContent = view('character.pdf', ['character' => $record, 'proficiences' => $proficiences])->render();
 
                             $mpdf = new Mpdf();
                             $mpdf->WriteHTML($htmlContent);
