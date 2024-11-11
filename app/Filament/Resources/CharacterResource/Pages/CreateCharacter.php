@@ -25,6 +25,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Validation\ValidationException;
 use function Filament\Support\is_app_url;
 
 class CreateCharacter extends CreateRecord
@@ -50,9 +51,9 @@ class CreateCharacter extends CreateRecord
                             ->label('Character Name')
                             ->required()
                             ->maxLength(40)
-                            ->hint(fn ($get) => $get('suggested_names') ? 'Suggested: ' . $get('suggested_names') : ''),
+                            ->hint(fn ($get) => $get('suggested_names') ? 'Suggested: ' . $get('suggested_names') : '')->columnSpanFull(),
                         Forms\Components\TextInput::make('name')
-                            ->label('Name')
+                            ->label('User Name')
                             ->required()
                             ->maxLength(40),
                         Forms\Components\Select::make('class_id')
@@ -101,13 +102,26 @@ class CreateCharacter extends CreateRecord
                     ->afterValidation(function () {
                         $data = $this->form->getState();
 
-                        $this->record = new ($this->getModel())($data);
+                        $existingCharacter = $this->getModel()::where('character_name', $data['character_name'])
+                            ->where('user_id', $data['user_id'])
+                            ->where('class_id', $data['class_id'])
+                            ->where('race_id', $data['race_id'])
+                            ->where('background_id', $data['background_id'])
+                            ->where('alignment_id', $data['alignment_id'])
+                            ->where('level', $data['level'])
+                            ->first();
 
-                        $this->record->save();
+                        if ($existingCharacter) {
+                            $existingCharacter->update($data);
+                            $this->record = $existingCharacter;
+                        } else {
+                            $this->record = new ($this->getModel())($data);
+                            $this->record->save();
+                        }
 
                         $defaultCharacteristics = [];
                         for ($i = 1; $i <= 6; $i++) {
-                            $defaultCharacteristics[$i] = ['value' => 10];  // 'value' - значення по замовчуванню
+                            $defaultCharacteristics[$i] = ['value' => 10];
                         }
                         $this->record->characteristics()->sync($defaultCharacteristics);
                     }),
