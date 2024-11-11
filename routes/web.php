@@ -29,6 +29,7 @@ Route::group(
         Route::get('locale/{locale}', LocaleController::class)->name('change-locale');
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/race/{id}', [InfoController::class, 'showRace'])->name('race.show');
+        Route::get('/class/{id}', [InfoController::class, 'showClass'])->name('class.show');
         Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
         Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
         Route::get('/details', [HomeController::class, 'details'])->name('details');

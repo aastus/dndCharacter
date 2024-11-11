@@ -142,6 +142,44 @@
                     </div>
                 </div>
             </div>
+
+            <div class="live-stream">
+                <div class="col-lg-12">
+                    <div class="heading-section">
+                        <h4><em>All</em> Classes</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach($classes as $race)
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="item">
+                            <div class="thumb">
+                                <img src="{{ $race->getFirstMediaUrl('images') ?: asset('assets/images/stream-05.jpg') }}" alt="">
+                                <div class="hover-effect">
+                                    <div class="content">
+                                        <div class="live">
+                                            <a href="{{ route('class.show', ['id' => $race->id]) }}">{{$race->name}}</a>
+                                        </div>
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
+                                            <li><a href="#"><i class="fa fa-gamepad"></i> CS-GO</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="down-content">
+                                <h4>{{$race->name}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    <div class="col-lg-12">
+                        <div class="main-button">
+                            <a href="streams.html">Load More Streams</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
           <!-- ***** Gaming Library Start ***** -->
           <div class="gaming-library">
             <div class="col-lg-12">

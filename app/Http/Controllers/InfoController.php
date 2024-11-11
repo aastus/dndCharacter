@@ -20,5 +20,11 @@ class InfoController extends Controller
 
         return view('info.race', compact('race'));
     }
+    public function showClass($id)
+    {
+        $class = ClassModel::with('abilities','spells','proficiencies')->findOrFail($id);
+
+        return view('info.class', compact('class'));
+    }
 
 }

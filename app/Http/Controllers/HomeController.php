@@ -15,7 +15,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $races = Race::query()->orderBy('created_at', 'desc')->paginate(8);
-        $classes = ClassModel::query()->orderBy('created_at', 'desc')->paginate(3);
+        $classes = ClassModel::query()->orderBy('created_at', 'desc')->paginate(9);
 
         return view('pages.index', [
             'races' => $races,
