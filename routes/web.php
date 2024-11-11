@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InfoController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\LocaleMiddleware;
@@ -27,6 +28,7 @@ Route::group(
     function () {
         Route::get('locale/{locale}', LocaleController::class)->name('change-locale');
         Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::get('/race/{id}', [InfoController::class, 'showRace'])->name('race.show');
         Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
         Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
         Route::get('/details', [HomeController::class, 'details'])->name('details');

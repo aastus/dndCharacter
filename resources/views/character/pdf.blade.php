@@ -18,13 +18,9 @@
             <tbody>
             <tr>
                 <td>
-                    <div class="card" style="margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 0.5rem;
-        background-color: #fff;">
+                    <div class="card">
                         <div class="card-body text-center">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                                 class="rounded-circle img-fluid" style="width: 120px;">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 120px;">
                             <h5 class="my-2">{{ $character->character_name }}</h5>
                             <p class="text-muted mb-1">{{ $character->class->name ?? '-' }}</p>
                             <p class="text-muted mb-1">{{ $character->background->name ?? '-' }}</p>
@@ -184,9 +180,10 @@
                                     @php
                                         $char_modifier = floor(($character->characteristics->firstWhere('id', $prof->characteristic->id)->pivot->value - 10) / 2);
                                         $have = $character->proficiencies->firstWhere('id', $prof->id) != null;
+                                        $back = $character->background->proficiencies->firstWhere('id', $prof->id) != null;
                                         $spec = $have ? $character->proficiencies->firstWhere('id', $prof->id)->pivot->specialize : 0;
-                                        $text_color = $have ? ($spec ? 'text-info' : 'text-warning') : '';
-                                        $value = $char_modifier + ($have + $spec) * 2;
+                                        $text_color = $back || $have ? ($spec ? 'text-info' : 'text-warning') : '';
+                                        $value = $char_modifier + (($have || $back) + $spec) * 2;
                                         $text_color = $text_color != '' ? $text_color : ($value > 0 ? 'text-success' : ($value < 0 ? 'text-danger' : ''));
                                         $value = $value > 0 ? '+' . $value : $value;
                                     @endphp

@@ -120,7 +120,7 @@
                                 <div class="hover-effect">
                                     <div class="content">
                                         <div class="live">
-                                            <a href="#">{{$race->name}}</a>
+                                            <a href="{{ route('race.show', ['id' => $race->id]) }}">{{$race->name}}</a>
                                         </div>
                                         <ul>
                                             <li><a href="#"><i class="fa fa-eye"></i> 1.2K</a></li>
