@@ -58,4 +58,8 @@ class Character extends Model {
     public function weapons() {
         return $this->belongsToMany(Weapon::class, 'character_weapon');
     }
+
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('image')->singleFile();
+    }
 }

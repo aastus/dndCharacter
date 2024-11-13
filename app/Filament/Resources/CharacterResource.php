@@ -12,6 +12,7 @@ use App\Models\ClassModel;
 use App\Models\Proficiency;
 use App\Models\Race;
 use App\Models\Spell;
+use Illuminate\Support\Facades\Storage;
 use Mpdf\Mpdf;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Blade;
+use Spatie\Browsershot\Browsershot;
 
 class CharacterResource extends Resource
 {
@@ -364,12 +366,29 @@ class CharacterResource extends Resource
                     ->action(function (Model $record) {
                         return response()->streamDownload(function () use ($record) {
                             $proficiences = Proficiency::all();
-                            $htmlContent = view('character.pdf', ['character' => $record, 'proficiences' => $proficiences])->render();
 
-                            $mpdf = new Mpdf();
-                            $mpdf->WriteHTML($htmlContent);
-                            echo $mpdf->Output('', 'S'); // 'S' returns the PDF as a string
-                        }, 'персонаж '. $record->name . '.pdf');
+                            // Генеруємо HTML для PDF
+                            $htmlContent = view('character.pdf', [
+                                'character' => $record,
+                                'proficiences' => $proficiences,
+                            ])->render();
+
+                            $tempDir = storage_path('app/temp');
+                            if (!file_exists($tempDir)) {
+                                mkdir($tempDir, 0777, true);
+                            }
+                            // Тимчасовий файл для збереження PDF
+                            $tempPdfPath = $tempDir . '/' . uniqid('character_') . '.pdf';
+
+                            // Генеруємо PDF за допомогою Browsershot
+                            Browsershot::html($htmlContent)->save($tempPdfPath);
+
+                            // Виводимо PDF контент у відповідь
+                            echo file_get_contents($tempPdfPath);
+
+                            // Видаляємо тимчасовий файл після генерації PDF
+                            Storage::delete($tempPdfPath);
+                        }, 'персонаж_' . $record->name . '.pdf');
                     })
                     ->openUrlInNewTab(),
             ])
