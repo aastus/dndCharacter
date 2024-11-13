@@ -5,37 +5,39 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-content">
-                    <!-- ***** Race Basic Info Start ***** -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="main-profile">
                                 <div class="row">
                                     <div class="heading-section">
-                                        <h4>Alignments</h4>
+                                        <h4>Spells</h4>
                                     </div>
                                     <table id="myTable" class="table table-product" style="width:100%">
                                         <thead>
                                         <tr>
+                                            <th>Level</th>
                                             <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Cost</th>
-                                            <th>Damage</th>
-                                            <th>Characteristic</th>
+                                            <th>Classes</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($weapons as $weapon)
+                                        @foreach($spells as $spell)
                                             <tr>
-                                                <td>{{ $weapon->name }}</td>
-                                                <td>{{ $weapon->description }}</td>
-                                                <td>{{ $weapon->cost }}</td>
-                                                <td>{{ $weapon->damage }}</td>
-                                                <td>{{ $weapon->characteristic ? $weapon->characteristic->name : 'N/A' }}</td>
+                                                <td>{{ $spell->level }}</td>
+                                                <td>{{ $spell->name }}</td>
+                                                <td>
+                                                    @if ($spell->classes && $spell->classes->count() > 0)
+                                                        @foreach ($spell->classes as $class)
+                                                            <span>{{ $class->name }}</span>@if(!$loop->last), @endif
+                                                        @endforeach
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                     </table>
-
                                 </div>
                             </div>
                         </div>
@@ -44,7 +46,5 @@
             </div>
         </div>
     </div>
-
 @endsection
-
 

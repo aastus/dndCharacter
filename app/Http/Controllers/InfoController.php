@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ability;
 use App\Models\Alignment;
 use App\Models\Background;
 use App\Models\Character;
 use App\Models\ClassModel;
 use App\Models\Race;
+use App\Models\Spell;
 use App\Models\Weapon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -53,5 +55,20 @@ class InfoController extends Controller
             'weapons' => $weapons,
         ]);
     }
+    public function spells(Request $request)
+    {
+        $spells = Spell::with('classes')->orderBy('name', 'desc')->get();
 
+        return view('info.spells', [
+            'spells' => $spells,
+        ]);
+    }
+    public function abilities(Request $request)
+    {
+        $abilities = Ability::with('classes','races')->orderBy('name', 'desc')->get();
+
+        return view('info.abilities', [
+            'abilities' => $abilities,
+        ]);
+    }
 }

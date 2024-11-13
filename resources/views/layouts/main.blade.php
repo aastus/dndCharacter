@@ -92,9 +92,9 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="/" class="logo">
-                        <img src="assets/images/logo.png" alt="">
-                    </a>
+{{--                    <a href="/" class="logo">--}}
+{{--                        <img src="assets/images/logo.png" alt="">--}}
+{{--                    </a>--}}
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Search Start ***** -->
                     <div class="search-input">
@@ -104,10 +104,11 @@
                         </form>
                     </div>
                     <ul class="nav">
-                        <li><a href="{{route('home')}}" class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">Home</a></li>
                         <li><a href="{{route('alignments')}}" class="{{ Route::currentRouteName() == 'alignments' ? 'active' : '' }}">Alignments</a></li>
                         <li><a href="{{route('backgrounds')}}" class="{{ Route::currentRouteName() == 'backgrounds' ? 'active' : '' }}">Backgrounds</a></li>
                         <li><a href="{{route('weapons')}}" class="{{ Route::currentRouteName() == 'weapons' ? 'active' : '' }}">Weapons</a></li>
+                        <li><a href="{{route('spells')}}" class="{{ Route::currentRouteName() == 'spells' ? 'active' : '' }}">Spells</a></li>
+                        <li><a href="{{route('abilities')}}" class="{{ Route::currentRouteName() == 'abilities' ? 'active' : '' }}">Abilities</a></li>
                         @if (app()->getLocale() === 'en')
                             <li><a href="{{ route('change-locale', 'uk') }}">UK</a></li>
                         @else
@@ -203,7 +204,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
-        let table = new DataTable('#weaponTable');
+        let table = new DataTable('#myTable');
 </script>
 </body>
 

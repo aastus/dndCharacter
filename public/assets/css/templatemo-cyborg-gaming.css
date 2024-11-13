@@ -71,7 +71,102 @@ ul, li {
 header, nav, section, article, aside, footer, hgroup {
   display: block;
 }
+.table {
+    color: #ffffff;
+}
 
+.table th,
+.table td {
+    color: #ffffff;
+    padding: 12px;
+    line-height: 1.8;
+}
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+.table tbody tr:last-child th {
+    border-bottom: none;
+}
+
+/* Стиль для поля пошуку */
+.dataTables_filter input {
+    padding: 10px;
+    margin-left: 10px;
+    font-size: 14px; /* Зменшений шрифт */
+    color: #fff;
+    background-color: #333;
+    border: none; /* Відсутність рамки */
+    border-radius: 3px; /* Злегка округлені кути */
+    outline: none; /* Видалення синьої обводки */
+}
+.dataTables_filter label {
+    color: #fff;
+}
+
+/* Стилі пагінації */
+.dataTables_paginate .paginate_button {
+    background-color: #e75e8d;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 12px;
+    margin: 0 4px;
+    font-weight: bold;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background-color: #e75e8d;
+    cursor: pointer;
+    color: white;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background-color: #e75e8d;
+    color: white;
+}
+
+.dataTables_paginate .previous, .dataTables_paginate .next {
+    background-color: #FF66B2;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+
+.dataTables_paginate .previous:hover, .dataTables_paginate .next:hover {
+    background-color: #e75e8d;
+    color: white;
+}
+
+/* Зниження видимості "Show entries" */
+#myTable_length {
+    visibility: hidden;
+    height: 0px;
+}
+.table th {
+    cursor: pointer; /* Зміна курсора на pointer для заголовків */
+}
+/* Стилізація стрілок для сортування */
+.dataTables_sorter::after {
+    content: '\2193'; /* Стрілка вниз */
+}
+
+/* При сортуванні стрілка змінює напрямок */
+.sorting_asc::after {
+    font-size: 16px;
+    color: #fff;
+    margin-left: 10px;
+    content: '\2191'; /* Стрілка вгору */
+}
+
+.sorting_desc::after {
+    font-size: 16px;
+    color: #fff;
+    margin-left: 10px;
+    content: '\2193'; /* Стрілка вниз */
+}
 * {
   box-sizing: border-box;
 }
