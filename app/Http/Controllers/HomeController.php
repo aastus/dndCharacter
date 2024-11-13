@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alignment;
+use App\Models\Background;
 use App\Models\Character;
 use App\Models\ClassModel;
 use App\Models\Race;
@@ -15,23 +17,13 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $races = Race::query()->orderBy('created_at', 'desc')->paginate(8);
-        $classes = ClassModel::query()->orderBy('created_at', 'desc')->paginate(9);
+        $classes = ClassModel::query()->orderBy('created_at', 'desc')->paginate(8);
 
         return view('pages.index', [
             'races' => $races,
             'classes' => $classes,
         ]);
     }
-
-    public function browse(Request $request)
-    {
-        $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);
-
-        return view('pages.browse', [
-            'races' => $races,
-        ]);
-    }
-
     public function streams(Request $request)
     {
         $races = Race::query()->orderBy('created_at', 'desc')->paginate(9);

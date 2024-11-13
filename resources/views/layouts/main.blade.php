@@ -104,10 +104,10 @@
                         </form>
                     </div>
                     <ul class="nav">
-                        <li><a href="{{route('home')}}">Home</a></li>
-                        <li><a href="browse.html" class="active">Browse</a></li>
-                        <li><a href="details.html">Details</a></li>
-                        <li><a href="streams.html">Streams</a></li>
+                        <li><a href="{{route('home')}}" class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">Home</a></li>
+                        <li><a href="{{route('alignments')}}" class="{{ Route::currentRouteName() == 'alignments' ? 'active' : '' }}">Alignments</a></li>
+                        <li><a href="{{route('backgrounds')}}" class="{{ Route::currentRouteName() == 'backgrounds' ? 'active' : '' }}">Backgrounds</a></li>
+                        <li><a href="{{route('weapons')}}" class="{{ Route::currentRouteName() == 'weapons' ? 'active' : '' }}">Weapons</a></li>
                         @if (app()->getLocale() === 'en')
                             <li><a href="{{ route('change-locale', 'uk') }}">UK</a></li>
                         @else
@@ -196,13 +196,15 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-
-<script src="{{ asset('assets/js/isotope.min.js') }}"></script>
 <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
 <script src="{{ asset('assets/js/tabs.js') }}"></script>
 <script src="{{ asset('assets/js/popup.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+        let table = new DataTable('#weaponTable');
+</script>
 </body>
 
 </html>

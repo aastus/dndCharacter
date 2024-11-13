@@ -30,7 +30,9 @@ Route::group(
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/race/{id}', [InfoController::class, 'showRace'])->name('race.show');
         Route::get('/class/{id}', [InfoController::class, 'showClass'])->name('class.show');
-        Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
+        Route::get('/alignments', [InfoController::class, 'alignments'])->name('alignments');
+        Route::get('/backgrounds', [InfoController::class, 'backgrounds'])->name('backgrounds');
+        Route::get('/weapons', [InfoController::class, 'weapons'])->name('weapons');
         Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
         Route::get('/details', [HomeController::class, 'details'])->name('details');
         Route::get('/profile', [HomeController::class, 'profile'])->name('profile');

@@ -155,7 +155,33 @@ p {
 	max-width: 80px;
 	border-radius: 23px;
 }
-
+.accordion-header-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: 18px;
+    padding: 15px;
+    background-color: #333;
+    border: 1px solid #444;
+    cursor: pointer;
+}
+.accordion-header-link:hover {
+    color: #F99;
+}
+.accordion-item {
+    border: none;
+    background-color: #1e1e1e;
+}
+.accordion-body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    color: #CCC;
+    background-color: #2a2a2a;
+    padding: 15px;
+    border: 1px solid #444;
+    line-height: 1.8;
+    font-size: 15px;
+}
 .main-button a {
   font-size: 14px;
   color: #fff;
