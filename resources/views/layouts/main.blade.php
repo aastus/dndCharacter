@@ -104,18 +104,18 @@
                         </form>
                     </div>
                     <ul class="nav">
-                        <li><a href="{{route('alignments')}}" class="{{ Route::currentRouteName() == 'alignments' ? 'active' : '' }}">Alignments</a></li>
-                        <li><a href="{{route('backgrounds')}}" class="{{ Route::currentRouteName() == 'backgrounds' ? 'active' : '' }}">Backgrounds</a></li>
-                        <li><a href="{{route('weapons')}}" class="{{ Route::currentRouteName() == 'weapons' ? 'active' : '' }}">Weapons</a></li>
-                        <li><a href="{{route('spells')}}" class="{{ Route::currentRouteName() == 'spells' ? 'active' : '' }}">Spells</a></li>
-                        <li><a href="{{route('abilities')}}" class="{{ Route::currentRouteName() == 'abilities' ? 'active' : '' }}">Abilities</a></li>
+                        <li><a href="{{route('alignments')}}" class="{{ Route::currentRouteName() == 'alignments' ? 'active' : '' }}">{{ __('Alignments') }}</a></li>
+                        <li><a href="{{route('backgrounds')}}" class="{{ Route::currentRouteName() == 'backgrounds' ? 'active' : '' }}">{{ __('Background') }}</a></li>
+                        <li><a href="{{route('weapons')}}" class="{{ Route::currentRouteName() == 'weapons' ? 'active' : '' }}">{{ __('Weapons') }}</a></li>
+                        <li><a href="{{route('spells')}}" class="{{ Route::currentRouteName() == 'spells' ? 'active' : '' }}">{{ __('Spells') }}</a></li>
+                        <li><a href="{{route('abilities')}}" class="{{ Route::currentRouteName() == 'abilities' ? 'active' : '' }}">{{ __('Abilities') }}</a></li>
                         @if (app()->getLocale() === 'en')
                             <li><a href="{{ route('change-locale', 'uk') }}">UK</a></li>
                         @else
                             <li><a href="{{ route('change-locale', 'en') }}">EN</a></li>
                         @endif
                         <li class="has-sub mt-1">
-                            <a href="profile.html" class="profile-menu-trigger">Profile </a>
+                            <a class="profile-menu-trigger">Profile</a>
                             <ul class="dropdown-menu">
                                 <center>
                                     @if (Route::has('login'))

@@ -11,16 +11,16 @@
                             <div class="main-profile">
                                 <div class="row">
                                     <div class="heading-section">
-                                        <h4>Alignments</h4>
+                                        <h4>{{ __('Weapons') }}</h4>
                                     </div>
                                     <table id="myTable" class="table table-product" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Cost</th>
-                                            <th>Damage</th>
-                                            <th>Characteristic</th>
+                                            <th>{{ __('Name') }}</th>
+                                            <th>{{ __('Description') }}</th>
+                                            <th>{{ __('Cost') }}</th>
+                                            <th>{{ __('Damage') }}</th>
+                                            <th>{{ __('Characteristic') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>

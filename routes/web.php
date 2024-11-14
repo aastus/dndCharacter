@@ -34,7 +34,9 @@ Route::group(
         Route::get('/backgrounds', [InfoController::class, 'backgrounds'])->name('backgrounds');
         Route::get('/weapons', [InfoController::class, 'weapons'])->name('weapons');
         Route::get('/spells', [InfoController::class, 'spells'])->name('spells');
+        Route::get('/spell/{id}', [InfoController::class, 'showSpell'])->name('spell');
         Route::get('/abilities', [InfoController::class, 'abilities'])->name('abilities');
+        Route::get('/ability/{id}', [InfoController::class, 'showAbility'])->name('ability');
         Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
         Route::get('/details', [HomeController::class, 'details'])->name('details');
         Route::get('/profile', [HomeController::class, 'profile'])->name('profile');

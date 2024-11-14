@@ -1,57 +1,33 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        .table {
-            color: #ffffff;
-        }
-
-        .table th,
-        .table td {
-            color: #ffffff;
-            padding: 12px;
-            line-height: 1.8;
-        }
-        .table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-        .table tbody tr:last-child th {
-            border-bottom: none;
-        }
-    </style>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-content">
-
-                    <!-- ***** Race Basic Info Start ***** -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="main-profile">
                                 <div class="row">
                                     <div class="heading-section">
-                                        <h4>Alignments</h4>
+                                        <h4>{{ __('Alignments') }}</h4>
                                     </div>
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Description</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($alignments as $alignment)
-                                            <tr>
-                                                <td>{{ $alignment->name }}</td>
-                                                <td>{{ $alignment->description }}</td>
-                                            </tr>
+                                    <div class="accordion" id="alignmentAccordion">
+                                        @foreach($alignments as $index => $alignment)
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="heading{{ $index }}">
+                                                    <div class="accordion-header-link" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $index }}">
+                                                        {{ $alignment->name }}
+                                                    </div>
+                                                </h2>
+                                                <div id="collapse{{ $index }}" class="accordion-collapse collapse @if($index === 0) show @endif" aria-labelledby="heading{{ $index }}" data-bs-parent="#alignmentAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>{{ $alignment->description }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
-                                        </tbody>
-                                    </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -61,5 +37,6 @@
         </div>
     </div>
 @endsection
+
 
 

@@ -1,27 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>.table {
-            color: #ffffff;
-        }
-
-        .table th,
-        .table td {
-            color: #ffffff;
-            padding: 12px;
-        }
-        .table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-        .table tbody tr:last-child th {
-            border-bottom: none;
-        }
-
-    </style>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -43,14 +22,14 @@
                                         <div class="featured-games header-text" style="padding:0px;">
 
                                             <p>{{ $race->description }}</p>
-                                            <h6 class ="mt-2">Suggested Names</h6><p>{{$race->suggested_names}}</p>
+                                            <h6 class ="mt-2">{{ __('Suggested names') }}</h6><p>{{$race->suggested_names}}</p>
                                             <table class="table">
                                                 <tr>
-                                                    <th>Move Speed</th>
+                                                    <th>{{ __('Move speed') }}</th>
                                                     <td>{{ $race->move_speed }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Languages</th>
+                                                    <th>{{ __('Languages') }}</th>
                                                     <td>@foreach($race->languages as $language)
                                                             {{ $language->name }},
                                                         @endforeach</td>
@@ -66,26 +45,26 @@
                         <div class="col-lg-8">
                             <div class="featured-games header-text">
                                 <div class="heading-section">
-                                    <h4><em>Abilities</em></h4>
+                                    <h4><em>{{ __('Abilities') }}</em></h4>
                                 </div>
                                 <ul>
                                     @foreach($race->abilities as $ability)
-                                        <h6>{{ $ability->name }} ({{ $ability->level }} lvl.)</h6>
+                                        <a href="/ability/{{$ability->id}}"><h6>{{ $ability->name }} ({{ $ability->level }} lvl.)</h6></a>
                                         <p class="py-2 mb-4">{{ $ability->description }}</p>
                                     @endforeach
                                 </ul>
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="featured-games">
+                            <div class="featured-games mb-4">
                                 <div class="heading-section">
-                                    <h4>Characteristics</h4>
+                                    <h4>{{ __('Characteristics') }}</h4>
                                 </div>
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th>Characteristic</th>
-                                        <th>Value</th>
+                                        <th>{{ __('Characteristic') }}</th>
+                                        <th>{{ __('Value') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -99,18 +78,18 @@
                                 </table>
                             </div>
                             @if($race->available_proficiency>0)
-                            <div class="featured-games mt-4">
-                                <div class="heading-section">
-                                    <h4>Proficiencies</h4>
+                                <div class="featured-games">
+                                    <div class="heading-section">
+                                        <h4>{{ __('Proficiencies') }}</h4>
+                                    </div>
+                                    <p style="color:#fff;">
+                                        Available {{ $race->available_proficiency }}: <br>
+                                        @foreach($race->proficiencies as $ability)
+                                            {{ $ability->name }},
+                                        @endforeach
+                                    </p>
                                 </div>
-                                <p style="color:#fff;">
-                                    Available {{ $race->available_proficiency }}: <br>
-                                    @foreach($race->proficiencies as $ability)
-                                        {{ $ability->name }},
-                                    @endforeach
-                                </p>
-                            </div>
-                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -10,28 +10,31 @@
                             <div class="main-profile">
                                 <div class="row">
                                     <div class="heading-section">
-                                        <h4>Spells</h4>
+                                        <h4>{{ __('Spells') }}</h4>
                                     </div>
                                     <table id="myTable" class="table table-product" style="width:100%">
                                         <thead>
                                         <tr>
-                                            <th>Level</th>
-                                            <th>Name</th>
-                                            <th>Classes</th>
+                                            <th>{{ __('Level') }}</th>
+                                            <th>{{ __('Name') }}</th>
+                                            <th>{{ __('Classes') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($spells as $spell)
                                             <tr>
                                                 <td>{{ $spell->level }}</td>
-                                                <td>{{ $spell->name }}</td>
+                                                <td><a href="/spell/{{$spell->id}}">{{ $spell->name }}</a></td>
                                                 <td>
                                                     @if ($spell->classes && $spell->classes->count() > 0)
                                                         @foreach ($spell->classes as $class)
-                                                            <span>{{ $class->name }}</span>@if(!$loop->last), @endif
+                                                            <a href="/class/{{$class->id}}">
+                                                                <span>{{ $class->name }}</span>
+                                                            </a>
+                                                            @if(!$loop->last), @endif
                                                         @endforeach
                                                     @else
-                                                        N/A
+                                                        -
                                                     @endif
                                                 </td>
                                             </tr>

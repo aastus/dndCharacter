@@ -33,7 +33,7 @@ class InfoController extends Controller
     }
     public function alignments(Request $request)
     {
-        $alignments = Alignment::orderBy('name', 'desc')->get();
+        $alignments = Alignment::orderBy('name', 'asc')->get();
 
         return view('info.alignment', [
             'alignments' => $alignments,
@@ -41,7 +41,7 @@ class InfoController extends Controller
     }
     public function backgrounds(Request $request)
     {
-        $backgrounds = Background::with('proficiencies')->orderBy('name', 'desc')->get();
+        $backgrounds = Background::with('proficiencies')->orderBy('name', 'asc')->get();
 
         return view('info.backgrounds', [
             'backgrounds' => $backgrounds,
@@ -49,7 +49,7 @@ class InfoController extends Controller
     }
     public function weapons(Request $request)
     {
-        $weapons = Weapon::with('characteristic')->orderBy('name', 'desc')->get();
+        $weapons = Weapon::with('characteristic')->orderBy('name', 'asc')->get();
 
         return view('info.weapons', [
             'weapons' => $weapons,
@@ -57,18 +57,36 @@ class InfoController extends Controller
     }
     public function spells(Request $request)
     {
-        $spells = Spell::with('classes')->orderBy('name', 'desc')->get();
+        $spells = Spell::with('classes')->orderBy('name', 'asc')->get();
 
         return view('info.spells', [
             'spells' => $spells,
         ]);
     }
+
+    public function showSpell($id)
+    {
+        $spell = Spell::with('classes')->findOrFail($id);;
+
+        return view('info.spell', [
+            'spell' => $spell,
+        ]);
+    }
     public function abilities(Request $request)
     {
-        $abilities = Ability::with('classes','races')->orderBy('name', 'desc')->get();
+        $abilities = Ability::with('classes','races')->orderBy('name', 'asc')->get();
 
         return view('info.abilities', [
             'abilities' => $abilities,
+        ]);
+    }
+
+    public function showAbility($id)
+    {
+        $ability = Ability::with('classes','races')->findOrFail($id);
+
+        return view('info.ability', [
+            'ability' => $ability,
         ]);
     }
 }

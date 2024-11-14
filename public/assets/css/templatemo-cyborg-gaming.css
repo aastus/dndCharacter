@@ -41,6 +41,30 @@ figure, header, nav, section, article, aside, footer, figcaption {
   outline: 0;
 }
 
+.proficiency-list h5 {
+    color: #fff;
+}
+
+.proficiency-list-items {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.proficiency-list-items li {
+    background-color: #FF69B4; /* Рожевий колір */
+    color: #fff;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin: 5px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    white-space: nowrap; /* Забезпечує відображення в один рядок */
+}
+
 .clearfix:after {
   content: ".";
   display: block;

@@ -1,31 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        .proficiency-list h5 {
-            color: #fff;
-        }
-
-        .proficiency-list-items {
-            display: flex;
-            flex-wrap: wrap;
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .proficiency-list-items li {
-            background-color: #FF69B4; /* Рожевий колір */
-            color: #fff;
-            border-radius: 20px;
-            padding: 8px 15px;
-            margin: 5px;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            white-space: nowrap; /* Забезпечує відображення в один рядок */
-        }
-    </style>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -36,7 +11,7 @@
                             <div class="main-profile">
                                 <div class="row">
                                     <div class="heading-section">
-                                        <h4>Alignments</h4>
+                                        <h4>{{ __('Backgrounds') }}</h4>
                                     </div>
                                     <div class="accordion" id="alignmentAccordion">
                                         @foreach($backgrounds as $index => $background)
