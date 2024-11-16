@@ -8,7 +8,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <title>Cyborg - Awesome HTML5 Template</title>
+    <title>DnD Character Constructor</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -92,17 +92,20 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-{{--                    <a href="/" class="logo">--}}
-{{--                        <img src="assets/images/logo.png" alt="">--}}
-{{--                    </a>--}}
+                    <a href="/" class="logo">
+                        <img src="assets/images/logo.png" alt="">
+                    </a>
                     <!-- ***** Logo End ***** -->
-                    <!-- ***** Search Start ***** -->
                     <div class="search-input">
-                        <form id="search" action="#">
-                            <input type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
+                        <form id="search" method="GET" action="/search">
+                            <input type="text" placeholder="Type Something" name="query" id="searchInput" />
                             <i class="fa fa-search"></i>
+
+                            <div id="searchResults" class="search-results"></div>
+                            <input type="hidden" id="requestType" name="requestType" value="api">
                         </form>
                     </div>
+
                     <ul class="nav">
                         <li><a href="{{route('alignments')}}" class="{{ Route::currentRouteName() == 'alignments' ? 'active' : '' }}">{{ __('Alignments') }}</a></li>
                         <li><a href="{{route('backgrounds')}}" class="{{ Route::currentRouteName() == 'backgrounds' ? 'active' : '' }}">{{ __('Background') }}</a></li>
@@ -115,15 +118,15 @@
                             <li><a href="{{ route('change-locale', 'en') }}">EN</a></li>
                         @endif
                         <li class="has-sub mt-1">
-                            <a class="profile-menu-trigger">Profile</a>
+                            <a class="profile-menu-trigger">{{ __('Profile') }}</a>
                             <ul class="dropdown-menu">
                                 <center>
                                     @if (Route::has('login'))
                                             @auth
                                                 <li>
                                                 <a
-                                                    href="{{ url('/dashboard') }}">
-                                                    Dashboard
+                                                    href="{{ url('/admin/characters') }}">
+                                                    {{ __('Dashboard') }}
                                                 </a>
                                                 </li>
                                             <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -205,6 +208,88 @@
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
         let table = new DataTable('#myTable');
+
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function () {
+            const query = this.value.trim();
+
+            if (query.length > 0) {
+                fetchResults(query);
+            } else {
+                searchResults.innerHTML = '<div class="no-results">Start typing to search...</div>';
+                searchResults.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            const isClickInside = searchInput.contains(event.target) || searchResults.contains(event.target);
+
+            if (!isClickInside) {
+                searchResults.style.display = 'none';
+            } else {
+                searchResults.style.display = 'block';
+            }
+        });
+
+        searchInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const query = searchInput.value.trim();
+                if (query.length > 0) {
+                    document.getElementById('search').submit();
+                }
+            }
+        });
+
+        searchInput.addEventListener('focus', () => {
+            searchResults.style.display = 'block';
+        });
+
+        function fetchResults(query) {
+            fetch(`/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    const categories = {};
+
+                    data.forEach(result => {
+                        const type = result.type;
+                        if (!categories[type]) {
+                            categories[type] = [];
+                        }
+                        categories[type].push(result);
+                    });
+
+                    for (const [type, results] of Object.entries(categories)) {
+                        const categoryTitle = document.createElement('div');
+                        categoryTitle.classList.add('search-category-title');
+                        categoryTitle.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                        searchResults.appendChild(categoryTitle);
+
+                        results.forEach(item => {
+                            const resultItem = document.createElement('div');
+                            resultItem.classList.add('search-result-item');
+                            resultItem.innerHTML = `<a href="${item.url}">${item.title}</a>`;
+
+                            resultItem.addEventListener('mousedown', () => {
+                                window.location.href = item.url;
+                            });
+
+                            searchResults.appendChild(resultItem);
+                        });
+                    }
+
+                    if (Object.keys(categories).length === 0) {
+                        searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    }
+
+                    searchResults.style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching search results:', error));
+        }
+
 </script>
 </body>
 

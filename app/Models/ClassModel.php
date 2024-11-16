@@ -8,8 +8,10 @@ use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Searchable\SearchResult;
+use Spatie\Searchable\Searchable;
 
-class ClassModel extends Model implements HasMedia
+class ClassModel extends Model implements HasMedia, Searchable
 {
     use InteractsWithMedia;
     protected $table = 'classes';
@@ -54,5 +56,15 @@ class ClassModel extends Model implements HasMedia
 
     public function registerMediaCollections(): void {
         $this->addMediaCollection('image')->singleFile();
+    }
+
+    public function getSearchResult(): SearchResult {
+        $url = '/class/' . $this->id;
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url,
+        );
     }
 }

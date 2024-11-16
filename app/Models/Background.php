@@ -5,8 +5,10 @@ namespace App\Models;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Background extends Model {
+class Background extends Model implements Searchable {
     protected $fillable = ['name', 'description'];
 
     public function characters() {
@@ -27,5 +29,16 @@ class Background extends Model {
                 ->required()
                 ->columnSpanFull(),
         ];
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = '/backgrounds#heading' . ($this->id - 1);
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url,
+        );
     }
 }

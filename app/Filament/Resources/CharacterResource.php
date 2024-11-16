@@ -13,6 +13,7 @@ use App\Models\Proficiency;
 use App\Models\Race;
 use App\Models\Spell;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 use Mpdf\Mpdf;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
@@ -51,7 +52,6 @@ class CharacterResource extends Resource
                     Forms\Components\Wizard\Step::make('Основна')
                         ->schema([
                             Forms\Components\TextInput::make('character_name')
-                                ->label('Character name')
                                 ->required()
                                 ->maxLength(40)
                                 ->hint(fn ($get) => $get('suggested_names') ? 'Suggested: ' . $get('suggested_names') : ''),
@@ -73,7 +73,9 @@ class CharacterResource extends Resource
                                     $record->proficiencies()->sync([]);
                                     $record->spells()->sync([]);
                                 })
-                                ->preload(),
+                                ->preload()
+                                ->hint(new HtmlString('<a href="' . route('classes') . '" target="_blank" class="text-blue-500 underline">Усі класи</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\Select::make('race_id')
                                 ->label('Race')
                                 ->required()
@@ -86,19 +88,25 @@ class CharacterResource extends Resource
                                     self::updateProficiencyList($get, $set);
                                     self::setSugNames($state, $set);
                                 })
-                                ->preload(),
+                                ->preload()
+                                ->hint(new HtmlString('<a href="' . route('races') . '" target="_blank" class="text-blue-500 underline">Усі раси</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\Select::make('background_id')
                                 ->required()
                                 ->createOptionForm(Background::getForm())
                                 ->searchable()
                                 ->relationship('background', 'name')
-                                ->preload(),
+                                ->preload()
+                                ->hint(new HtmlString('<a href="' . route('backgrounds') . '" target="_blank" class="text-blue-500 underline">Усі передісторії</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\Select::make('alignment_id')
                                 ->required()
                                 ->createOptionForm(Alignment::getForm())
                                 ->searchable()
                                 ->relationship('alignment', 'name')
-                                ->preload(),
+                                ->preload()
+                                ->hint(new HtmlString('<a href="' . route('alignments') . '" target="_blank" class="text-blue-500 underline">Усі cвітогляди</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\TextInput::make('level')
                                 ->required()
                                 ->default(1)
@@ -263,7 +271,9 @@ class CharacterResource extends Resource
                                 ->searchable()
                                 ->relationship('weapons', 'name')
                                 ->preload()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->hint(new HtmlString('<a href="' . route('weapons') . '" target="_blank" class="text-blue-500 underline">Уся зброя</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\Select::make('spell_id')
                                 ->multiple()
                                 ->preload()
@@ -275,7 +285,9 @@ class CharacterResource extends Resource
                                         ->pluck('name', 'id');
                                 })
                                 ->preload()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->hint(new HtmlString('<a href="' . route('spells') . '" target="_blank" class="text-blue-500 underline">Усі заклинання</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                         ]),
 
                     // П’ята вкладка — Вигляд

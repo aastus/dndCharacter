@@ -39,6 +39,22 @@ class InfoController extends Controller
             'alignments' => $alignments,
         ]);
     }
+    public function classes(Request $request)
+    {
+        $classes = ClassModel::orderBy('name', 'asc')->get();
+
+        return view('info.classes', [
+            'classes' => $classes,
+        ]);
+    }
+    public function races(Request $request)
+    {
+        $races = Race::orderBy('name', 'asc')->get();
+
+        return view('info.races', [
+            'races' => $races,
+        ]);
+    }
     public function backgrounds(Request $request)
     {
         $backgrounds = Background::with('proficiencies')->orderBy('name', 'asc')->get();

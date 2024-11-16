@@ -25,6 +25,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Facades\FilamentView;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
 use function Filament\Support\is_app_url;
 
@@ -67,7 +68,9 @@ class CreateCharacter extends CreateRecord
                                 self::updateSpellsList($get, $set);
                                 self::setMaxHp($state, $set, $get);
                             })
-                            ->preload(),
+                            ->preload()
+                            ->hint(new HtmlString('<a href="' . route('classes') . '" target="_blank" class="text-blue-500 underline">Усі класи</a>'))
+                            ->hintIcon('heroicon-o-information-circle'),
                         Forms\Components\Select::make('race_id')
                             ->label('Race')
                             ->required()
@@ -80,19 +83,25 @@ class CreateCharacter extends CreateRecord
                             ->afterStateUpdated(function ($state, callable $set, $get) {
                                 self::updateProficiencyList($get, $set);
                                 self::setSugNames($state, $set);
-                            }),
+                            })
+                            ->hint(new HtmlString('<a href="' . route('races') . '" target="_blank" class="text-blue-500 underline">Усі раси</a>'))
+                            ->hintIcon('heroicon-o-information-circle'),
                         Forms\Components\Select::make('background_id')
                             ->required()
                             ->createOptionForm(Background::getForm())
                             ->searchable()
                             ->relationship('background', 'name')
-                            ->preload(),
+                            ->preload()
+                            ->hint(new HtmlString('<a href="' . route('backgrounds') . '" target="_blank" class="text-blue-500 underline">Усі передісторії</a>'))
+                            ->hintIcon('heroicon-o-information-circle'),
                         Forms\Components\Select::make('alignment_id')
                             ->required()
                             ->createOptionForm(Alignment::getForm())
                             ->searchable()
                             ->relationship('alignment', 'name')
-                            ->preload(),
+                            ->preload()
+                            ->hint(new HtmlString('<a href="' . route('alignments') . '" target="_blank" class="text-blue-500 underline">Усі cвітогляди</a>'))
+                            ->hintIcon('heroicon-o-information-circle'),
                         Forms\Components\TextInput::make('level')
                             ->required()
                             ->default(1)
@@ -280,7 +289,9 @@ class CreateCharacter extends CreateRecord
                                 ->searchable()
                                 ->relationship('weapons', 'name')
                                 ->preload()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->hint(new HtmlString('<a href="' . route('weapons') . '" target="_blank" class="text-blue-500 underline">Уся зброя</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                             Forms\Components\Select::make('spell_id')
                                 ->multiple()
                                 ->preload()
@@ -292,7 +303,9 @@ class CreateCharacter extends CreateRecord
                                         ->pluck('name', 'id');
                                 })
                                 ->preload()
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->hint(new HtmlString('<a href="' . route('spells') . '" target="_blank" class="text-blue-500 underline">Усі заклинання</a>'))
+                                ->hintIcon('heroicon-o-information-circle'),
                         ])
                         ->afterValidation(function (callable $get) {
                             $data = $this->form->getState();

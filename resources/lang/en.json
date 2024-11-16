@@ -6,6 +6,7 @@
     "Ability": "Ability",
     "Alignments": "Alignments",
     "Alignment": "Alignment",
+    "Backgrounds": "Backgrounds",
     "Create": "Create",
     "Edit": "Edit",
     "Name": "Name",
@@ -64,5 +65,8 @@
     "View": "Details",
     "Actions": "Actions",
     "Plus Speed": "Bonus Speed",
+    "Load More" : "Load More",
+    "Profile": "Profile",
+    "Dashboard" : "Character Constructor",
     "Order" : "Sorcery"
 }

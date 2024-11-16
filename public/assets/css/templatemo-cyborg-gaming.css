@@ -31,6 +31,57 @@ font & reset css
 reset
 ---------------------------------------------
 */
+
+.search-input input::placeholder {
+    color: #666;
+}
+
+.search-input input:focus {
+    border-color: #ec6090;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 500px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+
+.search-results .search-category-title {
+    padding: 10px 15px;
+    background: #333;
+    color: #ec6090;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.search-results .search-result-item {
+    padding: 10px 15px;
+    color: #ccc;
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.search-results .search-result-item:hover {
+    background-color: #ec6090;
+    color: #fff;
+}
+
+.search-results .no-results {
+    padding: 15px;
+    text-align: center;
+    color: #ccc;
+    font-style: italic;
+}
+
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, div
 pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q,
 s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,

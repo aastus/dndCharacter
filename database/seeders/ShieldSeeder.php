@@ -70,6 +70,16 @@ class ShieldSeeder extends Seeder
         // Create Super Admin User and assign role
         $this->createSuperAdmin();
 
+        $rolesWithPermissions2 = '[{
+            "name": "panel_user",
+            "guard_name": "web",
+            "permissions": [
+                "view_character", "view_any_character", "create_character", "update_character", "restore_character", "restore_any_character",
+                "replicate_character", "reorder_character", "delete_character", "delete_any_character", "force_delete_character", "force_delete_any_character",
+            ]
+        }]';
+        $this->makeRolesWithPermissions($rolesWithPermissions2);
+        $this->makeDirectPermissions($directPermissions);
         $this->command->info('Shield Seeding Completed.');
     }
 
@@ -96,6 +106,7 @@ class ShieldSeeder extends Seeder
 
                     // Sync permissions with the role
                     $role->syncPermissions($permissions);
+                    $this->command->info($role->name);
                 }
             }
         }

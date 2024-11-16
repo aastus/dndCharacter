@@ -8,8 +8,10 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Alignment extends Model {
+class Alignment extends Model implements Searchable {
     protected $fillable = ['name', 'description'];
 
     public $timestamps = false;
@@ -28,5 +30,16 @@ class Alignment extends Model {
                 ->required()
                 ->columnSpanFull(),
         ];
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = '/alignments#heading' . ($this->id - 1);
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url,
+        );
     }
 }

@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/google/redirect', [App\Http\Controllers\GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [App\Http\Controllers\GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
-Route::get('/dashboard', function () {
-    return view('pages.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -31,15 +27,15 @@ Route::group(
         Route::get('/race/{id}', [InfoController::class, 'showRace'])->name('race.show');
         Route::get('/class/{id}', [InfoController::class, 'showClass'])->name('class.show');
         Route::get('/alignments', [InfoController::class, 'alignments'])->name('alignments');
+        Route::get('/classes', [InfoController::class, 'classes'])->name('classes');
+        Route::get('/races', [InfoController::class, 'races'])->name('races');
         Route::get('/backgrounds', [InfoController::class, 'backgrounds'])->name('backgrounds');
         Route::get('/weapons', [InfoController::class, 'weapons'])->name('weapons');
         Route::get('/spells', [InfoController::class, 'spells'])->name('spells');
         Route::get('/spell/{id}', [InfoController::class, 'showSpell'])->name('spell');
         Route::get('/abilities', [InfoController::class, 'abilities'])->name('abilities');
         Route::get('/ability/{id}', [InfoController::class, 'showAbility'])->name('ability');
-        Route::get('/streams', [HomeController::class, 'streams'])->name('streams');
-        Route::get('/details', [HomeController::class, 'details'])->name('details');
-        Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+        Route::get('/search', [HomeController::class, 'search']);
     }
 );
 

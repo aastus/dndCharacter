@@ -62,6 +62,11 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                auth()->check() && auth()->user()->hasRole('super_admin')
+                    ? \App\Models\User::query()
+                    : \App\Models\User::where('id', auth()->id())
+            )
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')

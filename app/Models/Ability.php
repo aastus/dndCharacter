@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Searchable\SearchResult;
+use Spatie\Searchable\Searchable;
 
-class Ability extends Model {
+class Ability extends Model implements Searchable {
     protected $fillable = ['name', 'description', 'level'];
 
     public function classes() {
@@ -17,5 +19,16 @@ class Ability extends Model {
 
     public function characters() {
         return $this->belongsToMany(Character::class, 'character_ability');
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        $url = '/ability/' . $this->id;
+
+        return new SearchResult(
+            $this,
+            $this->name,
+            $url,
+        );
     }
 }
